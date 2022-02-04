@@ -9,13 +9,16 @@
 #include "cbase.h"
 #include "npcevent.h"
 #include "weapon_css_base.h"
-#include "basecombatcharacter.h"
-#include "ai_basenpc.h"
-#include "player.h"
 #include "gamerules.h"
 #include "in_buttons.h"
 #include "gamestats.h"
 #include "ammodef.h"
+#ifdef CLIENT_DLL
+#else
+#include "basecombatcharacter.h"
+#include "ai_basenpc.h"
+#include "player.h"
+#endif
 
 #define	PISTOL_ACCURACY_SHOT_PENALTY_TIME		0.2f	// Applied amount of time each shot adds to the time we must recover from
 #define	PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME	1.5f	// Maximum penalty to deal out
@@ -32,14 +35,47 @@ BEGIN_DATADESC( CBase_CSS_HL2_Pistol )
 	DEFINE_FIELD( m_flAccuracyPenalty,		FIELD_FLOAT ), //NOTENOTE: This is NOT tracking game time
 	DEFINE_FIELD( m_nNumShotsFired,			FIELD_INTEGER ),
 
+	DEFINE_CSS_WEAPON_DATADESC()
+
 END_DATADESC()
 
+IMPLEMENT_NETWORKCLASS_DT( CBase_CSS_HL2_Pistol, DT_Base_CSS_HL2_Pistol )
+
+#ifdef CLIENT_DLL
+	RecvPropTime( RECVINFO( m_flSoonestPrimaryAttack ) ),
+	RecvPropTime( RECVINFO( m_flLastAttackTime ) ),
+	RecvPropFloat( RECVINFO( m_flAccuracyPenalty ) ),
+	RecvPropInt( RECVINFO( m_nNumShotsFired ) ),
+#else
+	SendPropTime( SENDINFO( m_flSoonestPrimaryAttack ) ),
+	SendPropTime( SENDINFO( m_flLastAttackTime ) ),
+	SendPropFloat( SENDINFO( m_flAccuracyPenalty ) ),
+	SendPropInt( SENDINFO( m_nNumShotsFired ) ),
+#endif
+
+	DEFINE_CSS_WEAPON_NETWORK_TABLE()
+
+END_NETWORK_TABLE()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CBase_CSS_HL2_Pistol )
+
+	DEFINE_PRED_FIELD( m_flSoonestPrimaryAttack, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
+	DEFINE_PRED_FIELD( m_flLastAttackTime, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
+	DEFINE_PRED_FIELD( m_flAccuracyPenalty, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
+	DEFINE_PRED_FIELD( m_nNumShotsFired, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
+
+END_PREDICTION_DATA()
+#endif
+
+#ifndef CLIENT_DLL
 acttable_t	CBase_CSS_HL2_Pistol::m_acttable[] = 
 {
 	{ ACT_IDLE,						ACT_IDLE_PISTOL,				true },
 };
 
 IMPLEMENT_ACTTABLE( CBase_CSS_HL2_Pistol );
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -65,6 +101,7 @@ void CBase_CSS_HL2_Pistol::Precache( void )
 	BaseClass::Precache();
 }
 
+#ifndef CLIENT_DLL
 //-----------------------------------------------------------------------------
 // Purpose:
 // Input  :
@@ -121,6 +158,7 @@ void CBase_CSS_HL2_Pistol::Operator_ForceNPCFire( CBaseCombatCharacter *pOperato
 	AngleVectors( angShootDir, &vecShootDir );
 	FireNPCPrimaryAttack( pOperator, vecShootOrigin, vecShootDir );
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -150,7 +188,9 @@ void CBase_CSS_HL2_Pistol::PrimaryAttack( void )
 
 	m_flLastAttackTime = gpGlobals->curtime;
 	m_flSoonestPrimaryAttack = gpGlobals->curtime + GetRefireRate();
+#ifndef CLIENT_DLL
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL_CSS, 0.2, GetOwner() );
+#endif
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -175,7 +215,11 @@ void CBase_CSS_HL2_Pistol::PrimaryAttack( void )
 	// 
 	pOwner->DoMuzzleFlash();
 
-	SendWeaponAnim( GetPrimaryAttackActivity() );
+	// HACKHACK: Don't repeat burst sequences from the glock
+	if (!InBurst() || GetActivity() != ACT_VM_SECONDARYATTACK)
+	{
+		SendWeaponAnim( GetPrimaryAttackActivity() );
+	}
 
 	// player "shoot" animation
 	pOwner->SetAnimation( PLAYER_ATTACK1 );
@@ -249,7 +293,9 @@ void CBase_CSS_HL2_Pistol::PrimaryAttack( void )
 	m_flAccuracyPenalty += PISTOL_ACCURACY_SHOT_PENALTY_TIME;
 
 	m_iPrimaryAttacks++;
+#ifndef CLIENT_DLL
 	gamestats->Event_WeaponFired( pOwner, true, GetClassname() );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -257,21 +303,11 @@ void CBase_CSS_HL2_Pistol::PrimaryAttack( void )
 //-----------------------------------------------------------------------------
 void CBase_CSS_HL2_Pistol::SecondaryAttack( void )
 {
+	BaseClass::SecondaryAttack();
+
 	if (CanToggleSilencer() && m_flNextSecondaryAttack <= gpGlobals->curtime)
 	{
-		if (IsSilenced())
-		{
-			SendWeaponAnim( ACT_VM_DETACH_SILENCER );
-			m_bSilenced = false;
-		}
-		else
-		{
-			SendWeaponAnim( ACT_VM_ATTACH_SILENCER );
-			m_bSilenced = true;
-		}
-
-		m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
-		m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+		// The base toggles the silencer in this case
 		m_flSoonestPrimaryAttack = gpGlobals->curtime + SequenceDuration();
 	}
 }
@@ -386,14 +422,25 @@ void CBase_CSS_HL2_Pistol::AddViewKick( void )
 // CBase_CSS_HL2_MachineGun
 //-----------------------------------------------------------------------------
 BEGIN_DATADESC( CBase_CSS_HL2_MachineGun )
+
+	DEFINE_CSS_WEAPON_DATADESC()
+
 END_DATADESC()
 
+IMPLEMENT_NETWORKCLASS_DT( CBase_CSS_HL2_MachineGun, DT_Base_CSS_HL2_MachineGun )
+
+	DEFINE_CSS_WEAPON_NETWORK_TABLE()
+
+END_NETWORK_TABLE()
+
+#ifndef CLIENT_DLL
 acttable_t	CBase_CSS_HL2_MachineGun::m_acttable[] =
 {
 	{ ACT_IDLE,						ACT_IDLE_SMG1,				true },
 };
 
 IMPLEMENT_ACTTABLE( CBase_CSS_HL2_MachineGun );
+#endif
 
 //=========================================================
 CBase_CSS_HL2_MachineGun::CBase_CSS_HL2_MachineGun( )
@@ -412,6 +459,7 @@ void CBase_CSS_HL2_MachineGun::Precache( void )
 	BaseClass::Precache();
 }
 
+#ifndef CLIENT_DLL
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -475,6 +523,7 @@ void CBase_CSS_HL2_MachineGun::Operator_HandleAnimEvent( animevent_t *pEvent, CB
 		break;
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -500,7 +549,9 @@ void CBase_CSS_HL2_MachineGun::AddViewKick( void )
 	if ( pPlayer == NULL )
 		return;
 
+#ifndef CLIENT_DLL
 	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );
+#endif
 }
 
 //-----------------------------------------------------------------------------

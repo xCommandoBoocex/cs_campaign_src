@@ -589,6 +589,161 @@ public:
 
 LINK_ENTITY_TO_CLASS( item_ammo_ar2_altfire, CItem_AR2AltFireRound );
 
+#ifdef CSS_WEAPONS_IN_HL2
+#define SIZE_AMMO_40ACP				12
+#define SIZE_AMMO_40ACP_LARGE		60
+#define SIZE_AMMO_357SIG			13
+#define SIZE_AMMO_357SIG_LARGE		39
+#define SIZE_AMMO_556NATO			30
+#define SIZE_AMMO_556NATO_LARGE		60
+#define SIZE_AMMO_762NATO			30
+#define SIZE_AMMO_762NATO_LARGE		60
+
+// ========================================================================
+//	>> Box45ACPRounds
+// ========================================================================
+class CItem_Box45ACPRounds : public CItem
+{
+public:
+	DECLARE_CLASS( CItem_Box45ACPRounds, CItem );
+
+	void Spawn( void )
+	{ 
+		Precache( );
+		SetModel( "models/items/45acp_box.mdl" );
+		BaseClass::Spawn( );
+	}
+	void Precache( void )
+	{
+		PrecacheModel ("models/items/45acp_box.mdl");
+	}
+	bool MyTouch( CBasePlayer *pPlayer )
+	{
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_40ACP : SIZE_AMMO_40ACP_LARGE, "45ACP"))
+		{
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
+			{
+				UTIL_Remove(this);	
+			}
+
+			return true;
+		}
+		return false;
+	}
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_45acp_large"); }
+};
+LINK_ENTITY_TO_CLASS( item_css_ammo_45acp, CItem_Box45ACPRounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_45acp_large, CItem_Box45ACPRounds );
+
+// ========================================================================
+//	>> Box357SIGRounds
+// ========================================================================
+class CItem_Box357SIGRounds : public CItem
+{
+public:
+	DECLARE_CLASS( CItem_Box357SIGRounds, CItem );
+
+	void Spawn( void )
+	{ 
+		Precache( );
+		SetModel( "models/items/357sig_box.mdl" );
+		BaseClass::Spawn( );
+	}
+	void Precache( void )
+	{
+		PrecacheModel ("models/items/357sig_box.mdl");
+	}
+	bool MyTouch( CBasePlayer *pPlayer )
+	{
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_40ACP : SIZE_AMMO_40ACP_LARGE, "357SIG"))
+		{
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
+			{
+				UTIL_Remove(this);	
+			}
+
+			return true;
+		}
+		return false;
+	}
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_357sig_large"); }
+};
+LINK_ENTITY_TO_CLASS( item_css_ammo_357sig, CItem_Box357SIGRounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_357sig_large, CItem_Box357SIGRounds );
+
+// ========================================================================
+//	>> Box556NATORounds
+// ========================================================================
+class CItem_Box556NATORounds : public CItem
+{
+public:
+	DECLARE_CLASS( CItem_Box556NATORounds, CItem );
+
+	void Spawn( void )
+	{ 
+		Precache( );
+		SetModel( "models/items/556nato_box.mdl" );
+		BaseClass::Spawn( );
+	}
+	void Precache( void )
+	{
+		PrecacheModel ("models/items/556nato_box.mdl");
+	}
+	bool MyTouch( CBasePlayer *pPlayer )
+	{
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_556NATO : SIZE_AMMO_556NATO_LARGE, "556nato"))
+		{
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
+			{
+				UTIL_Remove(this);	
+			}
+
+			return true;
+		}
+		return false;
+	}
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_556nato_large"); }
+};
+LINK_ENTITY_TO_CLASS( item_css_ammo_556nato, CItem_Box556NATORounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_556nato_large, CItem_Box556NATORounds );
+
+// ========================================================================
+//	>> Box762NATORounds
+// ========================================================================
+class CItem_Box762NATORounds : public CItem
+{
+public:
+	DECLARE_CLASS( CItem_Box762NATORounds, CItem );
+
+	void Spawn( void )
+	{ 
+		Precache( );
+		SetModel( "models/items/762nato_box.mdl" );
+		BaseClass::Spawn( );
+	}
+	void Precache( void )
+	{
+		PrecacheModel ("models/items/762nato_box.mdl");
+	}
+	bool MyTouch( CBasePlayer *pPlayer )
+	{
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_762NATO : SIZE_AMMO_762NATO_LARGE, "762nato"))
+		{
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
+			{
+				UTIL_Remove(this);	
+			}
+
+			return true;
+		}
+		return false;
+	}
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_762nato_large"); }
+};
+LINK_ENTITY_TO_CLASS( item_css_ammo_762nato, CItem_Box762NATORounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_762nato_large, CItem_Box762NATORounds );
+#endif
+
 // ==================================================================
 // Ammo crate which will supply infinite ammo of the specified type
 // ==================================================================

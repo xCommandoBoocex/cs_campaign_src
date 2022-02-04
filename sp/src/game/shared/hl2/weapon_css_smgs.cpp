@@ -16,7 +16,8 @@ class CWeapon_CSS_HL2_TMP : public CBase_CSS_HL2_SMG
 {
 public:
 	DECLARE_CLASS( CWeapon_CSS_HL2_TMP, CBase_CSS_HL2_SMG );
-	DECLARE_SERVERCLASS();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_TMP(void);
@@ -33,14 +34,19 @@ public:
 	virtual float GetFireRate( void ) { return 0.07f; }
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_CSS_HL2_TMP, DT_Weapon_CSS_HL2_TMP )
-END_SEND_TABLE()
+IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_TMP, DT_Weapon_CSS_HL2_TMP )
+END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_tmp, CWeapon_CSS_HL2_TMP );
 PRECACHE_WEAPON_REGISTER( weapon_css_tmp );
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_TMP )
 END_DATADESC()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_TMP )
+END_PREDICTION_DATA()
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -62,7 +68,8 @@ class CWeapon_CSS_HL2_MP5Navy : public CBase_CSS_HL2_SMG
 {
 public:
 	DECLARE_CLASS( CWeapon_CSS_HL2_MP5Navy, CBase_CSS_HL2_SMG );
-	DECLARE_SERVERCLASS();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_MP5Navy(void);
@@ -79,14 +86,19 @@ public:
 	virtual float GetFireRate( void ) { return 0.08f; }
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_CSS_HL2_MP5Navy, DT_Weapon_CSS_HL2_MP5Navy )
-END_SEND_TABLE()
+IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_MP5Navy, DT_Weapon_CSS_HL2_MP5Navy )
+END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_mp5navy, CWeapon_CSS_HL2_MP5Navy );
 PRECACHE_WEAPON_REGISTER( weapon_css_mp5navy );
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_MP5Navy )
 END_DATADESC()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_MP5Navy )
+END_PREDICTION_DATA()
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -108,7 +120,8 @@ class CWeapon_CSS_HL2_UMP45 : public CBase_CSS_HL2_SMG
 {
 public:
 	DECLARE_CLASS( CWeapon_CSS_HL2_UMP45, CBase_CSS_HL2_SMG );
-	DECLARE_SERVERCLASS();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_UMP45(void);
@@ -130,14 +143,19 @@ public:
 	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_CSS_HL2_UMP45, DT_Weapon_CSS_HL2_UMP45 )
-END_SEND_TABLE()
+IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_UMP45, DT_Weapon_CSS_HL2_UMP45 )
+END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_ump45, CWeapon_CSS_HL2_UMP45 );
 PRECACHE_WEAPON_REGISTER( weapon_css_ump45 );
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_UMP45 )
 END_DATADESC()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_UMP45 )
+END_PREDICTION_DATA()
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -159,7 +177,8 @@ class CWeapon_CSS_HL2_P90 : public CBase_CSS_HL2_SMG
 {
 public:
 	DECLARE_CLASS( CWeapon_CSS_HL2_P90, CBase_CSS_HL2_SMG );
-	DECLARE_SERVERCLASS();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_P90(void);
@@ -176,14 +195,19 @@ public:
 	virtual float GetFireRate( void ) { return 0.07f; }
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_CSS_HL2_P90, DT_Weapon_CSS_HL2_P90 )
-END_SEND_TABLE()
+IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_P90, DT_Weapon_CSS_HL2_P90 )
+END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_p90, CWeapon_CSS_HL2_P90 );
 PRECACHE_WEAPON_REGISTER( weapon_css_p90 );
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_P90 )
 END_DATADESC()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_P90 )
+END_PREDICTION_DATA()
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -205,7 +229,8 @@ class CWeapon_CSS_HL2_MAC10 : public CBase_CSS_HL2_SMG
 {
 public:
 	DECLARE_CLASS( CWeapon_CSS_HL2_MAC10, CBase_CSS_HL2_SMG );
-	DECLARE_SERVERCLASS();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_MAC10(void);
@@ -227,14 +252,19 @@ public:
 	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_CSS_HL2_MAC10, DT_Weapon_CSS_HL2_MAC10 )
-END_SEND_TABLE()
+IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_MAC10, DT_Weapon_CSS_HL2_MAC10 )
+END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_mac10, CWeapon_CSS_HL2_MAC10 );
 PRECACHE_WEAPON_REGISTER( weapon_css_mac10 );
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_MAC10 )
 END_DATADESC()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_MAC10 )
+END_PREDICTION_DATA()
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor

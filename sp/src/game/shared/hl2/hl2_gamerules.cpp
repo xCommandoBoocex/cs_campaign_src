@@ -190,13 +190,13 @@ ConVar	sk_plr_dmg_357sig			( "sk_plr_dmg_357sig", "20", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_357sig			( "sk_npc_dmg_357sig", "15", FCVAR_REPLICATED );
 ConVar	sk_max_357sig				( "sk_max_357sig", "52", FCVAR_REPLICATED );
 
-ConVar	sk_plr_dmg_556mm			( "sk_plr_dmg_556mm", "7", FCVAR_REPLICATED );
-ConVar	sk_npc_dmg_556mm			( "sk_npc_dmg_556mm", "3", FCVAR_REPLICATED );
-ConVar	sk_max_556mm				( "sk_max_556mm", "90", FCVAR_REPLICATED );
+ConVar	sk_plr_dmg_556nato			( "sk_plr_dmg_556nato", "7", FCVAR_REPLICATED );
+ConVar	sk_npc_dmg_556nato			( "sk_npc_dmg_556nato", "3", FCVAR_REPLICATED );
+ConVar	sk_max_556nato				( "sk_max_556nato", "90", FCVAR_REPLICATED );
 
-ConVar	sk_plr_dmg_762mm			( "sk_plr_dmg_762mm", "9", FCVAR_REPLICATED );
-ConVar	sk_npc_dmg_762mm			( "sk_npc_dmg_762mm", "4", FCVAR_REPLICATED );
-ConVar	sk_max_762mm				( "sk_max_762mm", "60", FCVAR_REPLICATED );
+ConVar	sk_plr_dmg_762nato			( "sk_plr_dmg_762nato", "9", FCVAR_REPLICATED );
+ConVar	sk_npc_dmg_762nato			( "sk_npc_dmg_762nato", "4", FCVAR_REPLICATED );
+ConVar	sk_max_762nato				( "sk_max_762nato", "60", FCVAR_REPLICATED );
 #endif
 
 //-----------------------------------------------------------------------------
@@ -1893,8 +1893,8 @@ CAmmoDef *GetAmmoDef()
 #ifdef CSS_WEAPONS_IN_HL2
 		def.AddAmmoType("45ACP",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_45acp",		"sk_npc_dmg_45acp",		"sk_max_45acp",		BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("357SIG",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_357sig",	"sk_npc_dmg_357sig",	"sk_max_357sig",	BULLET_IMPULSE(200, 1225), 0 );
-		def.AddAmmoType("556mm",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_556mm",		"sk_npc_dmg_556mm",		"sk_max_556mm",		BULLET_IMPULSE(200, 1225), 0 );
-		def.AddAmmoType("762mm",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_762mm",		"sk_npc_dmg_762mm",		"sk_max_762mm",		BULLET_IMPULSE(200, 1225), 0 );
+		def.AddAmmoType("556nato",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_556nato",		"sk_npc_dmg_556nato",		"sk_max_556nato",		BULLET_IMPULSE(200, 1225), 0 );
+		def.AddAmmoType("762nato",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_762nato",		"sk_npc_dmg_762nato",		"sk_max_762nato",		BULLET_IMPULSE(200, 1225), 0 );
 #endif
 	}
 
