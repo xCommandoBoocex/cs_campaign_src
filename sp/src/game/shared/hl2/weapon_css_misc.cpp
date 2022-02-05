@@ -21,6 +21,8 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_M249(void);
+
+	virtual float GetViewKickBase() { return 0.0f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
@@ -38,7 +40,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_M249, DT_Weapon_CSS_HL2_M249 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_m249, CWeapon_CSS_HL2_M249 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_m249 );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_M249 )
 END_DATADESC()

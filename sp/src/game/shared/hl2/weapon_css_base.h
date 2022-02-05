@@ -16,6 +16,14 @@
 #include "basehlcombatweapon.h"
 #endif
 
+// Makes all CS:S weapons precache on map load, just like HL2's weapons.
+// This means CS:S weapons are always precached even when not in use by the current level.
+// This is left off by default to save resources.
+#define PRECACHE_REGISTER_CSS_WEAPONS 0
+
+// TODO: Enables code linking classes to the original CS:S classnames
+#define ALLOW_ORIGINAL_CSS_CLASSNAMES 1
+
 template <class BASE_WEAPON>
 class CBase_CSS_HL2_Weapon : public BASE_WEAPON
 {
@@ -189,6 +197,16 @@ public:
 		}
 	}
 
+	void InputSetSilencer( inputdata_t &inputdata )
+	{
+		m_bSilenced = inputdata.value.Bool();
+	}
+
+	void InputToggleSilencer( inputdata_t &inputdata )
+	{
+		m_bSilenced = !m_bSilenced;
+	}
+
 public:
 	CNetworkVar( bool, m_bSilenced );
 	CNetworkVar( int, m_iSilencedModelIndex ); // Not saved
@@ -196,20 +214,25 @@ public:
 	char	m_szSilencedModel[MAX_WEAPON_STRING]; // Not saved
 };
 
-#define DEFINE_CSS_WEAPON_SILENCED_DATADESC() \
-	DEFINE_KEYFIELD( m_bSilenced, FIELD_BOOLEAN, "Silenced" ), \
-
 #ifdef CLIENT_DLL
 
 #define DEFINE_CSS_WEAPON_SILENCED_NETWORK_TABLE() \
 	RecvPropBool( RECVINFO( m_bSilenced ) ), \
 	RecvPropInt( RECVINFO(m_iSilencedModelIndex) ), \
 
+#define DEFINE_CSS_WEAPON_SILENCED_DATADESC() \
+	DEFINE_KEYFIELD( m_bSilenced, FIELD_BOOLEAN, "Silenced" ), \
+
 #else
 
 #define DEFINE_CSS_WEAPON_SILENCED_NETWORK_TABLE() \
 	SendPropBool( SENDINFO( m_bSilenced ) ), \
 	SendPropModelIndex( SENDINFO(m_iSilencedModelIndex) ), \
+
+#define DEFINE_CSS_WEAPON_SILENCED_DATADESC() \
+	DEFINE_KEYFIELD( m_bSilenced, FIELD_BOOLEAN, "Silenced" ), \
+	DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetSilencer", InputSetSilencer ),	\
+	DEFINE_INPUTFUNC( FIELD_VOID, "ToggleSilencer", InputToggleSilencer ),	\
 
 #endif
 
@@ -223,7 +246,7 @@ class CBase_CSS_HL2_BurstableWeapon : public BASE_WEAPON
 
 public:
 
-	virtual bool	InBurst() const { return m_bInBurst; }
+	virtual bool	InBurst() const { return this->m_iBurstSize > 0 || (this->m_bInBurstMode && this->GetOwner() && this->GetOwner()->IsNPC()); }
 
 	//virtual float	GetBurstCycleRate( void ) { return 1.0f; }
 	virtual int		GetBurstSize( void ) { return 3; };
@@ -244,11 +267,10 @@ public:
 
 		if (this->m_bInBurstMode)
 		{
-			// Reject player attempts to call this function
-			if (this->m_bInBurst)
+			// Don't continue if we're already burst firing
+			if (InBurst())
 				return;
 
-			this->m_bInBurst = true;
 			this->SendWeaponAnim( ACT_VM_IDLE ); // HACKHACK: Ensures that the burst animation begins
 
 			this->m_iBurstSize = this->GetBurstSize();
@@ -305,7 +327,6 @@ public:
 			// The burst is over!
 			SetThink(NULL);
 
-			this->m_bInBurst = false;
 			FinishBurst();
 
 			// idle immediately to stop the firing animation
@@ -316,9 +337,18 @@ public:
 		SetNextThink( gpGlobals->curtime + this->GetFireRate() );
 	}
 
+	void InputSetBurstMode( inputdata_t &inputdata )
+	{
+		m_bInBurstMode = inputdata.value.Bool();
+	}
+
+	void InputToggleBurstMode( inputdata_t &inputdata )
+	{
+		m_bInBurstMode = !m_bInBurstMode;
+	}
+
 public:
 	CNetworkVar( bool, m_bInBurstMode );
-	CNetworkVar( bool, m_bInBurst );
 	CNetworkVar( int, m_iBurstSize );
 };
 
@@ -326,31 +356,28 @@ public:
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_NETWORK_TABLE() \
 	RecvPropBool( RECVINFO( m_bInBurstMode ) ),	\
-	RecvPropBool( RECVINFO( m_bInBurst ) ),	\
 	RecvPropInt( RECVINFO( m_iBurstSize ) ),	\
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_DATADESC() \
 	DEFINE_FIELD( m_bInBurstMode, FIELD_BOOLEAN ),	\
-	DEFINE_FIELD( m_bInBurst, FIELD_BOOLEAN ),	\
 	DEFINE_FIELD( m_iBurstSize, FIELD_INTEGER ),	\
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_PREDICTDESC() \
 	DEFINE_PRED_FIELD( m_bInBurstMode, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),	\
-	DEFINE_PRED_FIELD( m_bInBurst, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),	\
 	DEFINE_PRED_FIELD( m_iBurstSize, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),	\
 
 #else
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_NETWORK_TABLE() \
 	SendPropBool( SENDINFO( m_bInBurstMode ) ), \
-	SendPropBool( SENDINFO( m_bInBurst ) ), \
 	SendPropInt( SENDINFO( m_iBurstSize ) ), \
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_DATADESC() \
 	DEFINE_FIELD( m_bInBurstMode, FIELD_BOOLEAN ),	\
-	DEFINE_FIELD( m_bInBurst, FIELD_BOOLEAN ),	\
 	DEFINE_FIELD( m_iBurstSize, FIELD_INTEGER ),	\
 	DEFINE_FUNCTION( BurstThink ),	\
+	DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetBurstMode", InputSetBurstMode ),	\
+	DEFINE_INPUTFUNC( FIELD_VOID, "ToggleBurstMode", InputToggleBurstMode ),	\
 
 #endif
 
@@ -367,7 +394,7 @@ public:
 
 //---------------------------------------------------
 
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
+#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
 extern acttable_t *GetPistolActtable();
 extern int GetPistolActtableCount();
 #endif
@@ -409,18 +436,14 @@ public:
 
 	inline float GetAccuracyPenalty() { return m_flAccuracyPenalty; }
 
+	virtual float GetViewKickBase() { return 0.0f; }
+
 	virtual float GetRefireRate() { return 0.1f; }
 	virtual float GetDryRefireRate() { return 0.2f; }
 
 	virtual float GetShotPenaltyTime() { return 0.2f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 	
 	//-----------------------------------------------------------------------------
-
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
-	virtual acttable_t		*GetBackupActivityList() { return GetPistolActtable(); }
-	virtual int				GetBackupActivityListCount() { return GetPistolActtableCount(); }
-#endif
 
 #ifndef CLIENT_DLL
 	DECLARE_ACTTABLE();
@@ -436,12 +459,15 @@ private:
 
 //---------------------------------------------------
 
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
+#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
 extern acttable_t *GetSMG1Acttable();
 extern int GetSMG1ActtableCount();
 
 extern acttable_t *GetAR2Acttable();
 extern int GetAR2ActtableCount();
+
+extern acttable_t *GetShotgunActtable();
+extern int GetShotgunActtableCount();
 #endif
 
 class CBase_CSS_HL2_MachineGun : public CBase_CSS_HL2_Weapon<CHLMachineGun>
@@ -465,6 +491,8 @@ public:
 #endif
 	Activity	GetPrimaryAttackActivity( void );
 
+	virtual float GetViewKickBase() { return 0.0f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{
 		static const Vector cone = VECTOR_CONE_5DEGREES;
@@ -481,7 +509,33 @@ public:
 	
 	//-----------------------------------------------------------------------------
 
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
+#ifndef CLIENT_DLL
+	DECLARE_ACTTABLE();
+#endif
+
+private:
+};
+
+//=============================================================================
+//=============================================================================
+
+class CBase_CSS_HL2_SMG : public CBase_CSS_HL2_MachineGun
+{
+public:
+	DECLARE_CLASS( CBase_CSS_HL2_SMG, CBase_CSS_HL2_MachineGun );
+
+private:
+};
+
+//=============================================================================
+//=============================================================================
+
+class CBase_CSS_HL2_Rifle : public CBase_CSS_HL2_MachineGun
+{
+public:
+	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_MachineGun );
+
+#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
 	virtual acttable_t		*GetBackupActivityList() { return GetSMG1Acttable(); }
 	virtual int				GetBackupActivityListCount() { return GetSMG1ActtableCount(); }
 #endif
@@ -493,44 +547,77 @@ public:
 private:
 };
 
-class CBase_CSS_HL2_SMG : public CBase_CSS_HL2_MachineGun
-{
-public:
-	DECLARE_CLASS( CBase_CSS_HL2_SMG, CBase_CSS_HL2_MachineGun );
-
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
-	virtual acttable_t		*GetBackupActivityList() { return GetSMG1Acttable(); }
-	virtual int				GetBackupActivityListCount() { return GetSMG1ActtableCount(); }
-#endif
-
-private:
-};
-
-class CBase_CSS_HL2_Rifle : public CBase_CSS_HL2_MachineGun
-{
-public:
-	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_MachineGun );
-
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
-	virtual acttable_t		*GetBackupActivityList() { return GetAR2Acttable(); }
-	virtual int				GetBackupActivityListCount() { return GetAR2ActtableCount(); }
-#endif
-
-private:
-};
+//=============================================================================
+//=============================================================================
 
 // TODO: Scope, etc.
-class CBase_CSS_HL2_SniperRifle : public CBase_CSS_HL2_MachineGun
+class CBase_CSS_HL2_SniperRifle : public CBase_CSS_HL2_Rifle
 {
 public:
-	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_MachineGun );
+	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_Rifle );
 
-#if defined(MAPBASE) && !defined(CLIENT_DLL)
-	virtual acttable_t		*GetBackupActivityList() { return GetAR2Acttable(); }
-	virtual int				GetBackupActivityListCount() { return GetAR2ActtableCount(); }
+private:
+};
+
+//=============================================================================
+//=============================================================================
+
+class CBase_CSS_HL2_Shotgun : public CBase_CSS_HL2_Weapon<CBaseHLCombatWeapon>
+{
+public:
+	DECLARE_CLASS( CBase_CSS_HL2_Shotgun, CBase_CSS_HL2_Weapon<CBaseHLCombatWeapon> );
+	DECLARE_DATADESC();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+	CBase_CSS_HL2_Shotgun(void);
+
+	virtual const Vector& GetBulletSpread( void )
+	{
+		static Vector cone = VECTOR_CONE_10DEGREES;
+		return cone;
+	}
+
+	virtual float			GetMinRestTime();
+	virtual float			GetMaxRestTime();
+
+	bool StartReload( void );
+	bool Reload( void );
+	void FillClip( void );
+	void FinishReload( void );
+	void CheckHolsterReload( void );
+	void Pump( void );
+//	void WeaponIdle( void );
+	void ItemHolsterFrame( void );
+	void ItemPostFrame( void );
+	void PrimaryAttack( void );
+	void SecondaryAttack( void );
+	void DryFire( void );
+	bool Deploy( void );
+
+	virtual int GetNumPellets() const { return 8; }
+	virtual int GetNumDoublePellets() const { return 12; }
+
+	virtual bool CanPump() { return true; }
+	virtual bool PumpsInOtherAnims() { return false; }
+
+#ifndef CLIENT_DLL
+	int CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
+
+	void FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool bUseWeaponAngles );
+	void Operator_ForceNPCFire( CBaseCombatCharacter  *pOperator, bool bSecondary );
+	void Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
+#endif
+
+#ifndef CLIENT_DLL
+	DECLARE_ACTTABLE();
 #endif
 
 private:
+	CNetworkVar( bool,	m_bNeedPump );		// When emptied completely
+	CNetworkVar( bool,	m_bDelayedFire1 );	// Fire primary when finished reloading
+	CNetworkVar( bool,	m_bDelayedFire2 );	// Fire secondary when finished reloading
+	CNetworkVar( bool,	m_bDelayedReload );	// Reload when finished pump
 };
 
 #endif // WEAPON_CSS_BASE_H
