@@ -40,6 +40,10 @@ public:
 
 	Activity	GetPrimaryAttackActivity( void );
 
+	virtual float GetViewKickBase() { return InBurst() ? 0.15f : 0.0f; }
+
+	virtual float GetShotPenaltyTime() { return InBurst() ? 0.1f : 0.2f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -49,26 +53,14 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_4DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
 
 		return cone;
 	}
@@ -76,12 +68,9 @@ public:
 	virtual int	GetMinBurst() { return 1; }
 	virtual int	GetMaxBurst() { return 3; }
 
-	virtual float GetFireRate( void ) { return m_bInBurst ? 0.075f : 0.5f; }
+	virtual float GetFireRate( void ) { return InBurst() ? 0.075f : 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f;	}
 	virtual float GetDryRefireRate( void ) { return 0.2f; }
-
-	virtual float GetShotPenaltyTime() { return 0.2f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_Glock18, DT_Weapon_CSS_HL2_Glock18 )
@@ -91,7 +80,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_Glock18, DT_Weapon_CSS_HL2_Glock18 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_glock, CWeapon_CSS_HL2_Glock18 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_glock );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_Glock18 )
 
@@ -156,6 +147,10 @@ public:
 
 	CWeapon_CSS_HL2_USP(void);
 
+	virtual float GetViewKickBase() { return m_bSilenced ? 0.05f : 0.0f; }
+
+	virtual float GetShotPenaltyTime() { return 0.2f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -165,39 +160,24 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_4DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
 
 		return cone;
 	}
 	
-	virtual int	GetMinBurst() { return 1; }
+	virtual int	GetMinBurst() { return InBurst() ? 3 : 1; }
 	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f;	}
 	virtual float GetDryRefireRate( void ) { return 0.2f; }
-
-	virtual float GetShotPenaltyTime() { return 0.2f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 
 	// Silencer damage adjustment
 	// Player damage: 8 -> 6.4 (6)
@@ -213,7 +193,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_USP, DT_Weapon_CSS_HL2_USP )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_usp, CWeapon_CSS_HL2_USP );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_usp );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_USP )
 
@@ -254,6 +236,10 @@ public:
 
 	CWeapon_CSS_HL2_P228(void);
 
+	virtual float GetViewKickBase() { return 1.25f; }
+
+	virtual float GetShotPenaltyTime() { return 0.3f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -263,26 +249,14 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_4DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
 
 		return cone;
 	}
@@ -293,16 +267,15 @@ public:
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f;	}
 	virtual float GetDryRefireRate( void ) { return 0.2f; }
-
-	virtual float GetShotPenaltyTime() { return 0.3f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_P228, DT_Weapon_CSS_HL2_P228 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_p228, CWeapon_CSS_HL2_P228 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_p228 );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_P228 )
 END_DATADESC()
@@ -338,6 +311,10 @@ public:
 
 	CWeapon_CSS_HL2_Deagle(void);
 
+	virtual float GetViewKickBase() { return 5.5f; }
+
+	virtual float GetShotPenaltyTime() { return 0.4f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -347,26 +324,14 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_2DEGREES, VECTOR_CONE_15DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_4DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_2DEGREES, VECTOR_CONE_8DEGREES, ramp, cone );
 
 		return cone;
 	}
@@ -377,9 +342,6 @@ public:
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.225f; }
 	virtual float GetDryRefireRate( void ) { return 0.25f; }
-
-	virtual float GetShotPenaltyTime() { return 0.3f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 
 	// Slightly weaker than the .357
 	// Player damage: 40 -> 36
@@ -392,7 +354,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_Deagle, DT_Weapon_CSS_HL2_Deagle )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_deagle, CWeapon_CSS_HL2_Deagle );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_deagle );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_Deagle )
 END_DATADESC()
@@ -428,6 +392,10 @@ public:
 
 	CWeapon_CSS_HL2_FiveSeveN(void);
 
+	virtual float GetViewKickBase() { return 1.5f; }
+
+	virtual float GetShotPenaltyTime() { return 0.4f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -437,26 +405,14 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_5DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_3DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_5DEGREES, ramp, cone );
 
 		return cone;
 	}
@@ -467,16 +423,15 @@ public:
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f; }
 	virtual float GetDryRefireRate( void ) { return 0.25f; }
-
-	virtual float GetShotPenaltyTime() { return 0.1f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_FiveSeveN, DT_Weapon_CSS_HL2_FiveSeveN )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_fiveseven, CWeapon_CSS_HL2_FiveSeveN );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_fiveseven );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_FiveSeveN )
 END_DATADESC()
@@ -515,6 +470,10 @@ public:
 	void	PrimaryAttack();
 	Activity	GetPrimaryAttackActivity( void );
 
+	virtual float GetViewKickBase() { return 1.0f; }
+
+	virtual float GetShotPenaltyTime() { return 0.2f; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
@@ -524,26 +483,14 @@ public:
 
 		static Vector cone;
 
-#ifdef CLIENT_DLL
-		if ( true ) // TODO
-#else
-		if ( pistol_use_new_accuracy.GetBool() )
-#endif
-		{
-			float ramp = RemapValClamped(	GetAccuracyPenalty(), 
-											0.0f, 
-											GetMaxShotPenalty(), 
-											0.0f, 
-											1.0f ); 
+		float ramp = RemapValClamped(	GetAccuracyPenalty(), 
+										0.0f, 
+										1.5f, 
+										0.0f, 
+										1.0f ); 
 
-			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
-		}
-		else
-		{
-			// Old value
-			cone = VECTOR_CONE_4DEGREES;
-		}
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp( VECTOR_CONE_2DEGREES, VECTOR_CONE_9DEGREES, ramp, cone );
 
 		return cone;
 	}
@@ -554,9 +501,6 @@ public:
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.12f; }
 	virtual float GetDryRefireRate( void ) { return 0.25f; }
-
-	virtual float GetShotPenaltyTime() { return 0.3f; }
-	virtual float GetMaxShotPenalty() { return 1.5f; }
 
 	// Tries to replicate CS:S's boosted damage without going crazy
 	// Player damage: 5 -> 7
@@ -579,7 +523,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_DualBerettas, DT_Weapon_CSS_HL2_DualB
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_elite, CWeapon_CSS_HL2_DualBerettas );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_elite );
+#endif
 
 #ifdef CLIENT_DLL
 BEGIN_PREDICTION_DATA( CWeapon_CSS_HL2_DualBerettas )

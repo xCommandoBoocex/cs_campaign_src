@@ -28,19 +28,21 @@ public:
 
 	virtual void FinishBurst( void )
 	{
-		this->m_flNextPrimaryAttack = gpGlobals->curtime + 0.2f; // TODO: Proper cooldown?
+		m_flNextPrimaryAttack = gpGlobals->curtime + 0.2f; // TODO: Proper cooldown?
 	}
+
+	virtual float GetViewKickBase() { return InBurst() ? 6.25f : 7.1f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static const Vector cone = VECTOR_CONE_3DEGREES;
 		return cone;
 	}
 	
 	virtual int	GetMinBurst() { return 1; }
 	virtual int	GetMaxBurst() { return 3; }
 
-	virtual float GetFireRate( void ) { return m_bInBurst ? 0.075f : 0.09f; }
+	virtual float GetFireRate( void ) { return InBurst() ? 0.075f : 0.09f; }
 
 	// Tries to replicate CS:S's lessened damage
 	// Player damage: 7 -> 6.3 (6)
@@ -56,7 +58,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_FAMAS, DT_Weapon_CSS_HL2_FAMAS )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_famas, CWeapon_CSS_HL2_FAMAS );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_famas );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_FAMAS )
 
@@ -99,10 +103,12 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_M4A1(void);
+
+	virtual float GetViewKickBase() { return 7.0f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static const Vector cone = VECTOR_CONE_3DEGREES;
 		return cone;
 	}
 	
@@ -119,7 +125,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_M4A1, DT_Weapon_CSS_HL2_M4A1 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_m4a1, CWeapon_CSS_HL2_M4A1 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_m4a1 );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_M4A1 )
 
@@ -159,10 +167,19 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_AUG(void);
+
+	// TODO
+	bool IsScoped() { return false; }
+
+	virtual float GetViewKickBase() { return 6.7f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static Vector cone;
+		if (IsScoped())
+			cone = VECTOR_CONE_1DEGREES;
+		else
+			cone = VECTOR_CONE_2DEGREES;
 		return cone;
 	}
 	
@@ -176,7 +193,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_AUG, DT_Weapon_CSS_HL2_AUG )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_aug, CWeapon_CSS_HL2_AUG );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_aug );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_AUG )
 END_DATADESC()
@@ -211,10 +230,19 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_SG552(void);
+
+	// TODO
+	bool IsScoped() { return false; }
+
+	virtual float GetViewKickBase() { return IsScoped() ? 6.4f : 7.0f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static Vector cone;
+		if (IsScoped())
+			cone = VECTOR_CONE_2DEGREES;
+		else
+			cone = VECTOR_CONE_3DEGREES;
 		return cone;
 	}
 	
@@ -234,7 +262,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_SG552, DT_Weapon_CSS_HL2_SG552 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_sg552, CWeapon_CSS_HL2_SG552 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_sg552 );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_SG552 )
 END_DATADESC()
@@ -269,10 +299,12 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_Galil(void);
+
+	virtual float GetViewKickBase() { return 6.5f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
 	
@@ -286,7 +318,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_Galil, DT_Weapon_CSS_HL2_Galil )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_galil, CWeapon_CSS_HL2_Galil );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_galil );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_Galil )
 END_DATADESC()
@@ -321,10 +355,12 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_AK47(void);
+
+	virtual float GetViewKickBase() { return 6.75f; }
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static const Vector cone = VECTOR_CONE_3DEGREES;
 		return cone;
 	}
 	
@@ -338,7 +374,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_AK47, DT_Weapon_CSS_HL2_AK47 )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_ak47, CWeapon_CSS_HL2_AK47 );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_ak47 );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_AK47 )
 END_DATADESC()
@@ -395,7 +433,9 @@ IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_Scout, DT_Weapon_CSS_HL2_Scout )
 END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_css_scout, CWeapon_CSS_HL2_Scout );
+#if PRECACHE_REGISTER_CSS_WEAPONS == 1
 PRECACHE_WEAPON_REGISTER( weapon_css_scout );
+#endif
 
 BEGIN_DATADESC( CWeapon_CSS_HL2_Scout )
 END_DATADESC()
