@@ -373,7 +373,7 @@ public:
 	SendPropInt( SENDINFO( m_iBurstSize ) ), \
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_DATADESC() \
-	DEFINE_FIELD( m_bInBurstMode, FIELD_BOOLEAN ),	\
+	DEFINE_KEYFIELD( m_bInBurstMode, FIELD_BOOLEAN, "InBurstMode" ),	\
 	DEFINE_FIELD( m_iBurstSize, FIELD_INTEGER ),	\
 	DEFINE_FUNCTION( BurstThink ),	\
 	DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetBurstMode", InputSetBurstMode ),	\
