@@ -594,10 +594,10 @@ LINK_ENTITY_TO_CLASS( item_ammo_ar2_altfire, CItem_AR2AltFireRound );
 #define SIZE_AMMO_40ACP_LARGE		60
 #define SIZE_AMMO_357SIG			13
 #define SIZE_AMMO_357SIG_LARGE		39
-#define SIZE_AMMO_556NATO			30
-#define SIZE_AMMO_556NATO_LARGE		60
-#define SIZE_AMMO_762NATO			30
-#define SIZE_AMMO_762NATO_LARGE		60
+#define SIZE_AMMO_556mm			30
+#define SIZE_AMMO_556mm_LARGE		60
+#define SIZE_AMMO_762mm			30
+#define SIZE_AMMO_762mm_LARGE		60
 
 // ========================================================================
 //	>> Box45ACPRounds
@@ -672,26 +672,26 @@ LINK_ENTITY_TO_CLASS( item_css_ammo_357sig, CItem_Box357SIGRounds );
 LINK_ENTITY_TO_CLASS( item_css_ammo_357sig_large, CItem_Box357SIGRounds );
 
 // ========================================================================
-//	>> Box556NATORounds
+//	>> Box556mmRounds
 // ========================================================================
-class CItem_Box556NATORounds : public CItem
+class CItem_Box556mmRounds : public CItem
 {
 public:
-	DECLARE_CLASS( CItem_Box556NATORounds, CItem );
+	DECLARE_CLASS( CItem_Box556mmRounds, CItem );
 
 	void Spawn( void )
 	{ 
 		Precache( );
-		SetModel( "models/items/556nato_box.mdl" );
+		SetModel( "models/items/556mm_box.mdl" );
 		BaseClass::Spawn( );
 	}
 	void Precache( void )
 	{
-		PrecacheModel ("models/items/556nato_box.mdl");
+		PrecacheModel ("models/items/556mm_box.mdl");
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_556NATO : SIZE_AMMO_556NATO_LARGE, "556nato"))
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_556mm : SIZE_AMMO_556mm_LARGE, "556mm"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -702,32 +702,32 @@ public:
 		}
 		return false;
 	}
-	inline bool IsLarge() { return ClassMatches("item_css_ammo_556nato_large"); }
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_556mm_large"); }
 };
-LINK_ENTITY_TO_CLASS( item_css_ammo_556nato, CItem_Box556NATORounds );
-LINK_ENTITY_TO_CLASS( item_css_ammo_556nato_large, CItem_Box556NATORounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_556mm, CItem_Box556mmRounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_556mm_large, CItem_Box556mmRounds );
 
 // ========================================================================
-//	>> Box762NATORounds
+//	>> Box762mmRounds
 // ========================================================================
-class CItem_Box762NATORounds : public CItem
+class CItem_Box762mmRounds : public CItem
 {
 public:
-	DECLARE_CLASS( CItem_Box762NATORounds, CItem );
+	DECLARE_CLASS( CItem_Box762mmRounds, CItem );
 
 	void Spawn( void )
 	{ 
 		Precache( );
-		SetModel( "models/items/762nato_box.mdl" );
+		SetModel( "models/items/762mm_box.mdl" );
 		BaseClass::Spawn( );
 	}
 	void Precache( void )
 	{
-		PrecacheModel ("models/items/762nato_box.mdl");
+		PrecacheModel ("models/items/762mm_box.mdl");
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_762NATO : SIZE_AMMO_762NATO_LARGE, "762nato"))
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_762mm : SIZE_AMMO_762mm_LARGE, "762mm"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -738,10 +738,10 @@ public:
 		}
 		return false;
 	}
-	inline bool IsLarge() { return ClassMatches("item_css_ammo_762nato_large"); }
+	inline bool IsLarge() { return ClassMatches("item_css_ammo_762mm_large"); }
 };
-LINK_ENTITY_TO_CLASS( item_css_ammo_762nato, CItem_Box762NATORounds );
-LINK_ENTITY_TO_CLASS( item_css_ammo_762nato_large, CItem_Box762NATORounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_762mm, CItem_Box762mmRounds );
+LINK_ENTITY_TO_CLASS( item_css_ammo_762mm_large, CItem_Box762mmRounds );
 #endif
 
 // ==================================================================
