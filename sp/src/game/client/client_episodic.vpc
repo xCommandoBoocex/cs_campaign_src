@@ -130,6 +130,7 @@ $Project "Client (Episodic)"
 
 			$Folder	"CS:S Weapons"
 			{
+				//$File	"$SRCDIR\game\shared\hl2\weapon_css_base_activitylists.cpp"
 				$File	"$SRCDIR\game\shared\hl2\weapon_css_base.cpp"
 				$File	"$SRCDIR\game\shared\hl2\weapon_css_base.h"
 				$File	"$SRCDIR\game\shared\hl2\weapon_css_pistols.cpp"

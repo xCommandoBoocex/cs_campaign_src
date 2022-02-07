@@ -15,6 +15,7 @@
 #else
 #include "basehlcombatweapon.h"
 #endif
+#include "in_buttons.h"
 
 // Makes all CS:S weapons precache on map load, just like HL2's weapons.
 // This means CS:S weapons are always precached even when not in use by the current level.
@@ -23,6 +24,47 @@
 
 // TODO: Enables code linking classes to the original CS:S classnames
 #define ALLOW_ORIGINAL_CSS_CLASSNAMES 1
+
+//=============================================================================
+
+// Used to determine activity table type
+enum CSS_HL2_WeaponActClass
+{
+	CSSHL2_WEAPON_PISTOL,				// Regular pistol animations. (Magazine is just below the trigger)
+	CSSHL2_WEAPON_REVOLVER,				// Custom 357 animations. Falls back to pistol. (Mapbase v7.0 only)
+
+	CSSHL2_WEAPON_SMG1,					// HL2 SMG1 animations. (Handgrip about 1 foot/30 cm from the trigger)
+	CSSHL2_WEAPON_SMG2,					// Custom SMG2 animations. Falls back to SMG1. (Left hand grips area near trigger; Mapbase v7.0 only)
+
+	CSSHL2_WEAPON_AR1,					// Custom AR1 animations. Falls back to AR2. (Forestock is about 1 foot/30 cm from the trigger and slightly elevated; Mapbase v7.0 only)
+	CSSHL2_WEAPON_AR2,					// HL2 AR2 animations. (Forestock is 6 inches/15 cm from the trigger and on the same level)
+
+	CSSHL2_WEAPON_SHOTGUN,				// HL2 Shotgun animations. (Fired from hip, forestock is a little over 1 foot/30 cm from trigger)
+
+	CSSHL2_WEAPON_SNIPER_RIFLE,			// Custom sniper rifle animations. Falls back to AR2. (TODO; Mapbase v7.0 only)
+};
+
+#ifndef CLIENT_DLL
+extern acttable_t *GetCSSActTable_Pistol();
+extern acttable_t *GetCSSActTable_Revolver();
+extern acttable_t *GetCSSActTable_SMG1();
+extern acttable_t *GetCSSActTable_SMG2();
+extern acttable_t *GetCSSActTable_AR1();
+extern acttable_t *GetCSSActTable_AR2();
+extern acttable_t *GetCSSActTable_Shotgun();
+extern acttable_t *GetCSSActTable_SniperRifle();
+
+extern int GetCSSActTableCount_Pistol();
+extern int GetCSSActTableCount_Revolver();
+extern int GetCSSActTableCount_SMG1();
+extern int GetCSSActTableCount_SMG2();
+extern int GetCSSActTableCount_AR1();
+extern int GetCSSActTableCount_AR2();
+extern int GetCSSActTableCount_Shotgun();
+extern int GetCSSActTableCount_SniperRifle();
+#endif
+
+//=============================================================================
 
 template <class BASE_WEAPON>
 class CBase_CSS_HL2_Weapon : public BASE_WEAPON
@@ -46,6 +88,72 @@ public:
 	{
 		return BaseClass::ShouldDisplayAltFireHUDHint() && (this->CanToggleSilencer() || this->CanUseBurstMode());
 	}
+
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR1; }
+
+#ifndef CLIENT_DLL
+	acttable_t *ActivityList( void )
+	{
+		switch (GetCSSWeaponActClass())
+		{
+			case CSSHL2_WEAPON_PISTOL:			return GetCSSActTable_Pistol();
+			case CSSHL2_WEAPON_REVOLVER:		return GetCSSActTable_Revolver();
+			case CSSHL2_WEAPON_SMG1:			return GetCSSActTable_SMG1();
+			case CSSHL2_WEAPON_SMG2:			return GetCSSActTable_SMG2();
+			case CSSHL2_WEAPON_AR1:				return GetCSSActTable_AR1();
+			case CSSHL2_WEAPON_AR2:				return GetCSSActTable_AR2();
+			case CSSHL2_WEAPON_SHOTGUN:			return GetCSSActTable_Shotgun();
+			case CSSHL2_WEAPON_SNIPER_RIFLE:	return GetCSSActTable_SniperRifle();
+		}
+
+		// Default case
+		return GetCSSActTable_AR1();
+	}
+
+	int ActivityListCount( void )
+	{
+		switch (GetCSSWeaponActClass())
+		{
+			case CSSHL2_WEAPON_PISTOL:			return GetCSSActTableCount_Pistol();
+			case CSSHL2_WEAPON_REVOLVER:		return GetCSSActTableCount_Revolver();
+			case CSSHL2_WEAPON_SMG1:			return GetCSSActTableCount_SMG1();
+			case CSSHL2_WEAPON_SMG2:			return GetCSSActTableCount_SMG2();
+			case CSSHL2_WEAPON_AR1:				return GetCSSActTableCount_AR1();
+			case CSSHL2_WEAPON_AR2:				return GetCSSActTableCount_AR2();
+			case CSSHL2_WEAPON_SHOTGUN:			return GetCSSActTableCount_Shotgun();
+			case CSSHL2_WEAPON_SNIPER_RIFLE:	return GetCSSActTableCount_SniperRifle();
+		}
+
+		// Default case
+		return GetCSSActTableCount_AR1();
+	}
+	
+	acttable_t *GetBackupActivityList()
+	{
+		switch (GetCSSWeaponActClass())
+		{
+			case CSSHL2_WEAPON_REVOLVER:		return GetCSSActTable_Pistol();
+			case CSSHL2_WEAPON_SMG2:			return GetCSSActTable_SMG1();
+			case CSSHL2_WEAPON_AR1:
+			case CSSHL2_WEAPON_SNIPER_RIFLE:	return GetCSSActTable_AR2();
+		}
+
+		return NULL;
+	}
+
+	int GetBackupActivityListCount()
+	{
+		switch (GetCSSWeaponActClass())
+		{
+			case CSSHL2_WEAPON_REVOLVER:		return GetCSSActTableCount_Pistol();
+			case CSSHL2_WEAPON_SMG2:			return GetCSSActTableCount_SMG1();
+			case CSSHL2_WEAPON_AR1:
+			case CSSHL2_WEAPON_SNIPER_RIFLE:	return GetCSSActTableCount_AR2();
+		}
+
+		return 0;
+	}
+#endif
 
 public:
 	CNetworkVar( bool, m_bCanToggleSilencer );
@@ -384,6 +492,131 @@ public:
 //=============================================================================
 //=============================================================================
 
+// Base used by both scoped assault rifles and sniper rifles
+template <class BASE_WEAPON>
+class CBase_CSS_HL2_BaseScopeableWeapon : public BASE_WEAPON
+{
+	DECLARE_CLASS_NOFRIEND( CBase_CSS_HL2_BaseScopeableWeapon, BASE_WEAPON );
+
+public:
+
+	bool Reload( void )
+	{
+		bool bBase = BaseClass::Reload();
+
+		if (bBase)
+			this->StopEffects();
+
+		return bBase;
+	}
+
+	bool Holster( CBaseCombatWeapon *pSwitchingTo )
+	{
+		this->StopEffects();
+		return BaseClass::Holster( pSwitchingTo );
+	}
+
+	void CheckZoomToggle( void )
+	{
+		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+
+		if (pPlayer->m_afButtonPressed & IN_ATTACK2)
+		{
+			this->ToggleZoom();
+		}
+	}
+
+	virtual void StopZoom( void ) { this->ToggleZoom(); }
+	virtual void ToggleZoom( void ) {}
+
+	void StopEffects( void )
+	{
+		// Stop zooming
+		if ( this->IsWeaponZoomed() )
+		{
+			this->StopZoom();
+		}
+	}
+
+	void Drop( const Vector &vecVelocity )
+	{
+		this->StopEffects();
+		BaseClass::Drop( vecVelocity );
+	}
+
+	void ItemPostFrame( void )
+	{
+		// Allow zoom toggling
+		this->CheckZoomToggle();
+
+		BaseClass::ItemPostFrame();
+	}
+};
+
+// For scoped assault rifles
+template <class BASE_WEAPON>
+class CBase_CSS_HL2_ScopeableWeapon : public CBase_CSS_HL2_BaseScopeableWeapon<BASE_WEAPON>
+{
+	DECLARE_CLASS_NOFRIEND( CBase_CSS_HL2_ScopeableWeapon, CBase_CSS_HL2_BaseScopeableWeapon<BASE_WEAPON> );
+
+public:
+
+	virtual bool	IsWeaponZoomed() { return m_bInZoom; }
+
+	virtual int		GetZoomFOV() const { return 55; }
+	virtual int		GetZoomRate() const { return 0.2f; }
+	virtual int		GetUnZoomRate() const { return 0.15f; }
+
+	virtual void ToggleZoom( void )
+	{
+		CBasePlayer *pPlayer = ToBasePlayer( this->GetOwner() );
+	
+		if ( pPlayer == NULL )
+			return;
+
+		if ( this->m_bInZoom )
+		{
+			if ( pPlayer->SetFOV( this, 0, this->GetUnZoomRate() ) )
+			{
+				this->m_bInZoom = false;
+			}
+		}
+		else
+		{
+			if ( pPlayer->SetFOV( this, this->GetZoomFOV(), this->GetZoomRate() ) )
+			{
+				this->m_bInZoom = true;
+			}
+		}
+
+		// Scope overlay handled by CBase_CSS_HL2_SniperRifle
+	}
+	
+public:
+	CNetworkVar( bool, m_bInZoom );
+};
+
+#ifdef CLIENT_DLL
+
+#define DEFINE_CSS_WEAPON_SCOPEABLE_NETWORK_TABLE() \
+	RecvPropBool( RECVINFO( m_bInZoom ) ),	\
+
+#define DEFINE_CSS_WEAPON_SCOPEABLE_PREDICTDESC() \
+	DEFINE_PRED_FIELD( m_bInZoom, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),	\
+
+#else
+
+#define DEFINE_CSS_WEAPON_SCOPEABLE_NETWORK_TABLE() \
+	SendPropBool( SENDINFO( m_bInZoom ) ), \
+
+#endif
+
+#define DEFINE_CSS_WEAPON_SCOPEABLE_DATADESC() \
+	DEFINE_FIELD( m_bInZoom,		FIELD_BOOLEAN ),	\
+
+//=============================================================================
+//=============================================================================
+
 template <class BASE_ITEM>
 class CBase_CSS_HL2_Item : public BASE_ITEM
 {
@@ -394,11 +627,6 @@ public:
 
 //---------------------------------------------------
 
-#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
-extern acttable_t *GetPistolActtable();
-extern int GetPistolActtableCount();
-#endif
-
 class CBase_CSS_HL2_Pistol : public CBase_CSS_HL2_Weapon<CBaseHLCombatWeapon>
 {
 public:
@@ -408,6 +636,8 @@ public:
 	DECLARE_PREDICTABLE();
 
 	CBase_CSS_HL2_Pistol(void);
+
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_PISTOL; }
 
 	void	Precache( void );
 	void	ItemPostFrame( void );
@@ -442,12 +672,11 @@ public:
 	virtual float GetDryRefireRate() { return 0.2f; }
 
 	virtual float GetShotPenaltyTime() { return 0.2f; }
+
+	virtual int	GetMinBurst() { return 1; }
+	virtual int	GetMaxBurst() { return 3; }
 	
 	//-----------------------------------------------------------------------------
-
-#ifndef CLIENT_DLL
-	DECLARE_ACTTABLE();
-#endif
 
 protected:
 	CNetworkVar( float,	m_flSoonestPrimaryAttack );
@@ -458,17 +687,6 @@ private:
 };
 
 //---------------------------------------------------
-
-#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
-extern acttable_t *GetSMG1Acttable();
-extern int GetSMG1ActtableCount();
-
-extern acttable_t *GetAR2Acttable();
-extern int GetAR2ActtableCount();
-
-extern acttable_t *GetShotgunActtable();
-extern int GetShotgunActtableCount();
-#endif
 
 class CBase_CSS_HL2_MachineGun : public CBase_CSS_HL2_Weapon<CHLMachineGun>
 {
@@ -509,10 +727,6 @@ public:
 	
 	//-----------------------------------------------------------------------------
 
-#ifndef CLIENT_DLL
-	DECLARE_ACTTABLE();
-#endif
-
 private:
 };
 
@@ -523,6 +737,11 @@ class CBase_CSS_HL2_SMG : public CBase_CSS_HL2_MachineGun
 {
 public:
 	DECLARE_CLASS( CBase_CSS_HL2_SMG, CBase_CSS_HL2_MachineGun );
+
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG1; }
+
+	int		GetMinBurst( void ) { return 2; }
+	int		GetMaxBurst( void ) { return 5; }
 
 private:
 };
@@ -535,14 +754,10 @@ class CBase_CSS_HL2_Rifle : public CBase_CSS_HL2_MachineGun
 public:
 	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_MachineGun );
 
-#if MAPBASE_VER_INT >= 7000 && !defined(CLIENT_DLL)
-	virtual acttable_t		*GetBackupActivityList() { return GetSMG1Acttable(); }
-	virtual int				GetBackupActivityListCount() { return GetSMG1ActtableCount(); }
-#endif
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR2; }
 
-#ifndef CLIENT_DLL
-	DECLARE_ACTTABLE();
-#endif
+	int		GetMinBurst( void ) { return 2; }
+	int		GetMaxBurst( void ) { return 5; }
 
 private:
 };
@@ -551,12 +766,33 @@ private:
 //=============================================================================
 
 // TODO: Scope, etc.
-class CBase_CSS_HL2_SniperRifle : public CBase_CSS_HL2_Rifle
+class CBase_CSS_HL2_SniperRifle : public CBase_CSS_HL2_BaseScopeableWeapon<CBase_CSS_HL2_Rifle>
 {
 public:
-	DECLARE_CLASS( CBase_CSS_HL2_Rifle, CBase_CSS_HL2_Rifle );
+	DECLARE_CLASS( CBase_CSS_HL2_SniperRifle, CBase_CSS_HL2_BaseScopeableWeapon<CBase_CSS_HL2_Rifle> );
+	DECLARE_DATADESC();
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+	CBase_CSS_HL2_SniperRifle();
+
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SNIPER_RIFLE; }
+
+	virtual bool	IsWeaponZoomed() { return m_nZoomLevel > 0; }
+
+	virtual int		GetZoom1FOV() const { return 55; }
+	virtual int		GetZoom2FOV() const { return 25; }
+	virtual int		GetZoomRate() const { return 0.2f; }
+	virtual int		GetUnZoomRate() const { return 0.15f; }
+
+	void	Precache();
+	void	AddViewKick( void );
+
+	virtual void	ToggleZoom( void );
+	virtual void	StopZoom( void );
 
 private:
+	CNetworkVar( int, m_nZoomLevel );
 };
 
 //=============================================================================
@@ -572,6 +808,8 @@ public:
 
 	CBase_CSS_HL2_Shotgun(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SHOTGUN; }
+
 	virtual const Vector& GetBulletSpread( void )
 	{
 		static Vector cone = VECTOR_CONE_10DEGREES;
@@ -580,6 +818,9 @@ public:
 
 	virtual float			GetMinRestTime();
 	virtual float			GetMaxRestTime();
+
+	virtual int				GetMinBurst() { return 1; }
+	virtual int				GetMaxBurst() { return 3; }
 
 	bool StartReload( void );
 	bool Reload( void );
@@ -607,10 +848,6 @@ public:
 	void FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool bUseWeaponAngles );
 	void Operator_ForceNPCFire( CBaseCombatCharacter  *pOperator, bool bSecondary );
 	void Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
-#endif
-
-#ifndef CLIENT_DLL
-	DECLARE_ACTTABLE();
 #endif
 
 private:

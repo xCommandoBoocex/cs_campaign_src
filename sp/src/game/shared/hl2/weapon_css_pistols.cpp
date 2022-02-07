@@ -65,7 +65,7 @@ public:
 		return cone;
 	}
 	
-	virtual int	GetMinBurst() { return 1; }
+	virtual int	GetMinBurst() { return InBurst() ? 3 : 1; }
 	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return InBurst() ? 0.075f : 0.5f; }
@@ -103,13 +103,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_Glock18::CWeapon_CSS_HL2_Glock18( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
-
 	m_bCanUseBurstMode	= true;
 }
 
@@ -171,9 +164,6 @@ public:
 
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return InBurst() ? 3 : 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f;	}
@@ -213,13 +203,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_USP::CWeapon_CSS_HL2_USP( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
-
 	m_bCanToggleSilencer = true;
 }
 
@@ -260,9 +243,6 @@ public:
 
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f;	}
@@ -290,12 +270,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_P228::CWeapon_CSS_HL2_P228( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------
@@ -310,6 +284,25 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_Deagle(void);
+
+	virtual Activity ActivityOverride( Activity baseAct, bool *pRequired )
+	{
+		Activity translatedAct = BaseClass::ActivityOverride( baseAct, pRequired );
+
+#if MAPBASE_VER_INT >= 7000
+		switch (translatedAct)
+		{
+			case ACT_RANGE_ATTACK_PISTOL:
+				return ACT_RANGE_ATTACK_REVOLVER;
+			case ACT_RANGE_ATTACK_PISTOL_LOW:
+				return ACT_RANGE_ATTACK_REVOLVER_LOW;
+			case ACT_RANGE_ATTACK_PISTOL_MED:
+				return ACT_RANGE_ATTACK_REVOLVER_MED;
+		}
+#endif
+
+		return translatedAct;
+	}
 
 	virtual float GetViewKickBase() { return 5.5f; }
 
@@ -335,9 +328,6 @@ public:
 
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.225f; }
@@ -371,12 +361,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_Deagle::CWeapon_CSS_HL2_Deagle( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------
@@ -416,9 +400,6 @@ public:
 
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.15f; }
@@ -446,12 +427,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_FiveSeveN::CWeapon_CSS_HL2_FiveSeveN( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------
@@ -494,9 +469,6 @@ public:
 
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.12f; }
@@ -546,12 +518,6 @@ END_DATADESC()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_DualBerettas::CWeapon_CSS_HL2_DualBerettas( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------

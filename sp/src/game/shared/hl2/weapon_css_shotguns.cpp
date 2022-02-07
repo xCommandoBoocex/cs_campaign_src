@@ -34,9 +34,6 @@ public:
 	
 	// No secondary attack
 	void SecondaryAttack( void ) {}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.88f; }
 };
@@ -75,6 +72,8 @@ public:
 	DECLARE_DATADESC();
 
 	CWeapon_CSS_HL2_XM1014(void);
+
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR2; } // Don't use the pump action animations
 	
 	virtual const Vector& GetBulletSpread( void )
 	{
@@ -88,11 +87,13 @@ public:
 
 	// No secondary attack
 	void SecondaryAttack( void ) {}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
-	virtual float GetFireRate( void ) { return 0.25f; }
+	virtual float GetFireRate( void ) { return IsNPC() ? 0.5f : 0.25f; }
+	
+	virtual float			GetMinRestTime() { return 0.6; }
+	virtual float			GetMaxRestTime() { return 1.0; }
+	virtual int				GetMinBurst() { return 2; }
+	virtual int				GetMaxBurst() { return 4; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_XM1014, DT_Weapon_CSS_HL2_XM1014 )

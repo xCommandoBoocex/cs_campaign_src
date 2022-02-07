@@ -22,6 +22,8 @@ public:
 
 	CWeapon_CSS_HL2_M249(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR1; }
+
 	virtual float GetViewKickBase() { return 0.0f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -30,8 +32,8 @@ public:
 		return cone;
 	}
 	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
+	virtual int	GetMinBurst() { return 7; }
+	virtual int	GetMaxBurst() { return 10; }
 
 	virtual float GetFireRate( void ) { return 0.08f; }
 };

@@ -22,6 +22,8 @@ public:
 
 	CWeapon_CSS_HL2_TMP(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG2; }
+
 	virtual float GetViewKickBase() { return 2.75f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -29,9 +31,6 @@ public:
 		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.07f; }
 };
@@ -57,11 +56,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_TMP::CWeapon_CSS_HL2_TMP( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
 	m_bFiresUnderwater	= true;
 }
 
@@ -78,6 +72,8 @@ public:
 
 	CWeapon_CSS_HL2_MP5Navy(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR1; }
+
 	virtual float GetViewKickBase() { return 0.25f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -85,9 +81,6 @@ public:
 		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.08f; }
 };
@@ -113,11 +106,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_MP5Navy::CWeapon_CSS_HL2_MP5Navy( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
 	m_bFiresUnderwater	= true;
 }
 
@@ -134,6 +122,8 @@ public:
 
 	CWeapon_CSS_HL2_UMP45(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG1; }
+
 	virtual float GetViewKickBase() { return 2.5f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -141,9 +131,6 @@ public:
 		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.105f; }
 
@@ -174,12 +161,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_UMP45::CWeapon_CSS_HL2_UMP45( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------
@@ -195,6 +176,8 @@ public:
 
 	CWeapon_CSS_HL2_P90(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG2; }
+
 	virtual float GetViewKickBase() { return 0.75f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -202,9 +185,6 @@ public:
 		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.07f; }
 };
@@ -230,12 +210,6 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_P90::CWeapon_CSS_HL2_P90( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }
 
 //-----------------------------------------------------------------------------
@@ -251,6 +225,8 @@ public:
 
 	CWeapon_CSS_HL2_MAC10(void);
 
+	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG2; }
+
 	virtual float GetViewKickBase() { return 1.0f; }
 	
 	virtual const Vector& GetBulletSpread( void )
@@ -258,9 +234,6 @@ public:
 		static const Vector cone = VECTOR_CONE_4DEGREES;
 		return cone;
 	}
-	
-	virtual int	GetMinBurst() { return 1; }
-	virtual int	GetMaxBurst() { return 3; }
 
 	virtual float GetFireRate( void ) { return 0.075f; }
 
@@ -291,10 +264,4 @@ END_PREDICTION_DATA()
 //-----------------------------------------------------------------------------
 CWeapon_CSS_HL2_MAC10::CWeapon_CSS_HL2_MAC10( void )
 {
-	m_fMinRange1		= 24;
-	m_fMaxRange1		= 1500;
-	m_fMinRange2		= 24;
-	m_fMaxRange2		= 200;
-
-	m_bFiresUnderwater	= true;
 }

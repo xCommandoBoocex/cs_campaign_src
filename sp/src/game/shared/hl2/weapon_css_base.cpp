@@ -10,7 +10,6 @@
 #include "npcevent.h"
 #include "weapon_css_base.h"
 #include "gamerules.h"
-#include "in_buttons.h"
 #include "gamestats.h"
 #include "ammodef.h"
 #ifdef CLIENT_DLL
@@ -66,36 +65,6 @@ BEGIN_PREDICTION_DATA( CBase_CSS_HL2_Pistol )
 	DEFINE_PRED_FIELD( m_nNumShotsFired, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
 
 END_PREDICTION_DATA()
-#endif
-
-#ifndef CLIENT_DLL
-#if MAPBASE_VER_INT >= 7000
-// 
-// Return the original pistol's act table
-// 
-acttable_t *CBase_CSS_HL2_Pistol::ActivityList( void ) { return GetPistolActtable(); }
-int CBase_CSS_HL2_Pistol::ActivityListCount( void ) { return GetPistolActtableCount(); }
-#else
-acttable_t	CBase_CSS_HL2_Pistol::m_acttable[] = 
-{
-	{ ACT_IDLE,						ACT_IDLE_PISTOL,				true },
-	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_PISTOL,			true },
-	{ ACT_RANGE_ATTACK1,			ACT_RANGE_ATTACK_PISTOL,		true },
-	{ ACT_RELOAD,					ACT_RELOAD_PISTOL,				true },
-	{ ACT_WALK_AIM,					ACT_WALK_AIM_PISTOL,			true },
-	{ ACT_RUN_AIM,					ACT_RUN_AIM_PISTOL,				true },
-	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_PISTOL,true },
-	{ ACT_RELOAD_LOW,				ACT_RELOAD_PISTOL_LOW,			false },
-	{ ACT_RANGE_ATTACK1_LOW,		ACT_RANGE_ATTACK_PISTOL_LOW,	false },
-	{ ACT_COVER_LOW,				ACT_COVER_PISTOL_LOW,			false },
-	{ ACT_RANGE_AIM_LOW,			ACT_RANGE_AIM_PISTOL_LOW,		false },
-	{ ACT_GESTURE_RELOAD,			ACT_GESTURE_RELOAD_PISTOL,		false },
-	{ ACT_WALK,						ACT_WALK_PISTOL,				false },
-	{ ACT_RUN,						ACT_RUN_PISTOL,					false },
-};
-
-IMPLEMENT_ACTTABLE( CBase_CSS_HL2_Pistol );
-#endif
 #endif
 
 //-----------------------------------------------------------------------------
@@ -457,75 +426,13 @@ IMPLEMENT_NETWORKCLASS_DT( CBase_CSS_HL2_MachineGun, DT_Base_CSS_HL2_MachineGun 
 
 END_NETWORK_TABLE()
 
-#ifndef CLIENT_DLL
-#if MAPBASE_VER_INT >= 7000
-// 
-// Return the original SMG's act table
-// 
-acttable_t *CBase_CSS_HL2_MachineGun::ActivityList( void ) { return GetSMG1Acttable(); }
-int CBase_CSS_HL2_MachineGun::ActivityListCount( void ) { return GetSMG1ActtableCount(); }
-#else
-acttable_t	CBase_CSS_HL2_MachineGun::m_acttable[] =
-{
-	{ ACT_RANGE_ATTACK1,			ACT_RANGE_ATTACK_SMG1,			true },
-	{ ACT_RELOAD,					ACT_RELOAD_SMG1,				true },
-	{ ACT_IDLE,						ACT_IDLE_SMG1,					true },
-	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_SMG1,			true },
-
-	{ ACT_WALK,						ACT_WALK_RIFLE,					true },
-	{ ACT_WALK_AIM,					ACT_WALK_AIM_RIFLE,				true  },
-	
-// Readiness activities (not aiming)
-	{ ACT_IDLE_RELAXED,				ACT_IDLE_SMG1_RELAXED,			false },//never aims
-	{ ACT_IDLE_STIMULATED,			ACT_IDLE_SMG1_STIMULATED,		false },
-	{ ACT_IDLE_AGITATED,			ACT_IDLE_ANGRY_SMG1,			false },//always aims
-
-	{ ACT_WALK_RELAXED,				ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_STIMULATED,			ACT_WALK_RIFLE_STIMULATED,		false },
-	{ ACT_WALK_AGITATED,			ACT_WALK_AIM_RIFLE,				false },//always aims
-
-	{ ACT_RUN_RELAXED,				ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_STIMULATED,			ACT_RUN_RIFLE_STIMULATED,		false },
-	{ ACT_RUN_AGITATED,				ACT_RUN_AIM_RIFLE,				false },//always aims
-
-// Readiness activities (aiming)
-	{ ACT_IDLE_AIM_RELAXED,			ACT_IDLE_SMG1_RELAXED,			false },//never aims	
-	{ ACT_IDLE_AIM_STIMULATED,		ACT_IDLE_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_IDLE_AIM_AGITATED,		ACT_IDLE_ANGRY_SMG1,			false },//always aims
-
-	{ ACT_WALK_AIM_RELAXED,			ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_AIM_STIMULATED,		ACT_WALK_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_WALK_AIM_AGITATED,		ACT_WALK_AIM_RIFLE,				false },//always aims
-
-	{ ACT_RUN_AIM_RELAXED,			ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_AIM_STIMULATED,		ACT_RUN_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_RUN_AIM_AGITATED,			ACT_RUN_AIM_RIFLE,				false },//always aims
-//End readiness activities
-
-	{ ACT_WALK_AIM,					ACT_WALK_AIM_RIFLE,				true },
-	{ ACT_WALK_CROUCH,				ACT_WALK_CROUCH_RIFLE,			true },
-	{ ACT_WALK_CROUCH_AIM,			ACT_WALK_CROUCH_AIM_RIFLE,		true },
-	{ ACT_RUN,						ACT_RUN_RIFLE,					true },
-	{ ACT_RUN_AIM,					ACT_RUN_AIM_RIFLE,				true },
-	{ ACT_RUN_CROUCH,				ACT_RUN_CROUCH_RIFLE,			true },
-	{ ACT_RUN_CROUCH_AIM,			ACT_RUN_CROUCH_AIM_RIFLE,		true },
-	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_SMG1,	true },
-	{ ACT_RANGE_ATTACK1_LOW,		ACT_RANGE_ATTACK_SMG1_LOW,		true },
-	{ ACT_COVER_LOW,				ACT_COVER_SMG1_LOW,				false },
-	{ ACT_RANGE_AIM_LOW,			ACT_RANGE_AIM_SMG1_LOW,			false },
-	{ ACT_RELOAD_LOW,				ACT_RELOAD_SMG1_LOW,			false },
-	{ ACT_GESTURE_RELOAD,			ACT_GESTURE_RELOAD_SMG1,		true },
-};
-
-IMPLEMENT_ACTTABLE( CBase_CSS_HL2_MachineGun );
-#endif
-#endif
-
 //=========================================================
 CBase_CSS_HL2_MachineGun::CBase_CSS_HL2_MachineGun( )
 {
-	m_fMinRange1		= 0;// No minimum range. 
-	m_fMaxRange1		= 1400;
+	m_fMinRange1 = 24;
+	m_fMaxRange1 = 1500;
+	m_fMinRange2 = 24;
+	m_fMaxRange2 = 200;
 
 	m_bAltFiresUnderwater = false;
 }
@@ -662,69 +569,130 @@ const WeaponProficiencyInfo_t *CBase_CSS_HL2_MachineGun::GetProficiencyValues()
 // CBase_CSS_HL2_Rifle
 //-----------------------------------------------------------------------------
 
-#ifndef CLIENT_DLL
-#if MAPBASE_VER_INT >= 7000
-// 
-// Return the original AR2's act table
-// 
-acttable_t *CBase_CSS_HL2_Rifle::ActivityList( void ) { return GetAR2Acttable(); }
-int CBase_CSS_HL2_Rifle::ActivityListCount( void ) { return GetAR2ActtableCount(); }
+//-----------------------------------------------------------------------------
+// CBase_CSS_HL2_SniperRifle
+//-----------------------------------------------------------------------------
+BEGIN_DATADESC( CBase_CSS_HL2_SniperRifle )
+
+	DEFINE_FIELD( m_nZoomLevel, FIELD_INTEGER ),
+
+END_DATADESC()
+
+IMPLEMENT_NETWORKCLASS_DT( CBase_CSS_HL2_SniperRifle, DT_Base_CSS_HL2_SniperRifle )
+
+#ifdef CLIENT_DLL
+	RecvPropInt( RECVINFO( m_nZoomLevel ) ),
 #else
-acttable_t	CBase_CSS_HL2_Rifle::m_acttable[] =
+	SendPropInt( SENDINFO( m_nZoomLevel ) ),
+#endif
+
+END_NETWORK_TABLE()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CBase_CSS_HL2_SniperRifle )
+
+	DEFINE_PRED_FIELD( m_nZoomLevel, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
+
+END_PREDICTION_DATA()
+#endif
+
+//=========================================================
+CBase_CSS_HL2_SniperRifle::CBase_CSS_HL2_SniperRifle( )
 {
-	{ ACT_RANGE_ATTACK1,			ACT_RANGE_ATTACK_AR2,			true },
-	{ ACT_RELOAD,					ACT_RELOAD_SMG1,				true },		// FIXME: hook to AR2 unique
-	{ ACT_IDLE,						ACT_IDLE_SMG1,					true },		// FIXME: hook to AR2 unique
-	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_SMG1,			true },		// FIXME: hook to AR2 unique
+	m_fMinRange1		= 0;// No minimum range. 
+	m_fMaxRange1		= 1400;
 
-	{ ACT_WALK,						ACT_WALK_RIFLE,					true },
+	m_bAltFiresUnderwater = false;
+}
 
-// Readiness activities (not aiming)
-	{ ACT_IDLE_RELAXED,				ACT_IDLE_SMG1_RELAXED,			false },//never aims
-	{ ACT_IDLE_STIMULATED,			ACT_IDLE_SMG1_STIMULATED,		false },
-	{ ACT_IDLE_AGITATED,			ACT_IDLE_ANGRY_SMG1,			false },//always aims
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBase_CSS_HL2_SniperRifle::Precache( void )
+{
+	BaseClass::Precache();
+}
 
-	{ ACT_WALK_RELAXED,				ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_STIMULATED,			ACT_WALK_RIFLE_STIMULATED,		false },
-	{ ACT_WALK_AGITATED,			ACT_WALK_AIM_RIFLE,				false },//always aims
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBase_CSS_HL2_SniperRifle::AddViewKick( void )
+{
+	CBasePlayer *pPlayer  = ToBasePlayer( GetOwner() );
+	
+	if ( pPlayer == NULL )
+		return;
 
-	{ ACT_RUN_RELAXED,				ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_STIMULATED,			ACT_RUN_RIFLE_STIMULATED,		false },
-	{ ACT_RUN_AGITATED,				ACT_RUN_AIM_RIFLE,				false },//always aims
+	QAngle	viewPunch;
 
-// Readiness activities (aiming)
-	{ ACT_IDLE_AIM_RELAXED,			ACT_IDLE_SMG1_RELAXED,			false },//never aims	
-	{ ACT_IDLE_AIM_STIMULATED,		ACT_IDLE_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_IDLE_AIM_AGITATED,		ACT_IDLE_ANGRY_SMG1,			false },//always aims
+	viewPunch.x = -GetViewKickBase();
+	viewPunch.y = (viewPunch.x * 0.15f);
 
-	{ ACT_WALK_AIM_RELAXED,			ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_AIM_STIMULATED,		ACT_WALK_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_WALK_AIM_AGITATED,		ACT_WALK_AIM_RIFLE,				false },//always aims
+	viewPunch.x += random->RandomFloat( -0.25f, -0.5f );
+	viewPunch.y += random->RandomFloat( -.6f, .6f );
+	viewPunch.z = 0.0f;
 
-	{ ACT_RUN_AIM_RELAXED,			ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_AIM_STIMULATED,		ACT_RUN_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_RUN_AIM_AGITATED,			ACT_RUN_AIM_RIFLE,				false },//always aims
-//End readiness activities
+	//Add it to the view punch
+	pPlayer->ViewPunch( viewPunch );
+}
 
-	{ ACT_WALK_AIM,					ACT_WALK_AIM_RIFLE,				true },
-	{ ACT_WALK_CROUCH,				ACT_WALK_CROUCH_RIFLE,			true },
-	{ ACT_WALK_CROUCH_AIM,			ACT_WALK_CROUCH_AIM_RIFLE,		true },
-	{ ACT_RUN,						ACT_RUN_RIFLE,					true },
-	{ ACT_RUN_AIM,					ACT_RUN_AIM_RIFLE,				true },
-	{ ACT_RUN_CROUCH,				ACT_RUN_CROUCH_RIFLE,			true },
-	{ ACT_RUN_CROUCH_AIM,			ACT_RUN_CROUCH_AIM_RIFLE,		true },
-	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_AR2,	false },
-	{ ACT_COVER_LOW,				ACT_COVER_SMG1_LOW,				false },		// FIXME: hook to AR2 unique
-	{ ACT_RANGE_AIM_LOW,			ACT_RANGE_AIM_AR2_LOW,			false },
-	{ ACT_RANGE_ATTACK1_LOW,		ACT_RANGE_ATTACK_SMG1_LOW,		true },		// FIXME: hook to AR2 unique
-	{ ACT_RELOAD_LOW,				ACT_RELOAD_SMG1_LOW,			false },
-	{ ACT_GESTURE_RELOAD,			ACT_GESTURE_RELOAD_SMG1,		true },
-//	{ ACT_RANGE_ATTACK2, ACT_RANGE_ATTACK_AR2_GRENADE, true },
-};
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBase_CSS_HL2_SniperRifle::ToggleZoom( void )
+{
+	BaseClass::ToggleZoom();
 
-IMPLEMENT_ACTTABLE( CBase_CSS_HL2_Rifle );
-#endif
-#endif
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+	
+	if ( pPlayer == NULL )
+		return;
+
+	switch (m_nZoomLevel)
+	{
+		case 0:
+			// Turn on zoom to level 1
+			if ( pPlayer->SetFOV( this, GetZoom1FOV(), GetZoomRate() ) )
+				m_nZoomLevel++;
+			break;
+		case 1:
+			// Set zoom to level 2
+			if ( pPlayer->SetFOV( this, GetZoom2FOV(), GetZoomRate() ) )
+				m_nZoomLevel++;
+			break;
+		case 2:
+			// Unzoom
+			if ( pPlayer->SetFOV( this, 0, GetUnZoomRate() ) )
+				m_nZoomLevel = 0;
+			break;
+	}
+
+	WeaponSound( SPECIAL3 );
+
+	if (m_nZoomLevel > 0)
+	{
+		// Turn on scope
+	}
+	else
+	{
+		// Turn off scope
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBase_CSS_HL2_SniperRifle::StopZoom( void )
+{
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+	
+	if ( pPlayer == NULL )
+		return;
+
+	// Unzoom
+	if ( pPlayer->SetFOV( this, 0, GetUnZoomRate() ) )
+		m_nZoomLevel = 0;
+}
 
 //-----------------------------------------------------------------------------
 // CBase_CSS_HL2_Shotgun
@@ -767,70 +735,6 @@ BEGIN_PREDICTION_DATA( CBase_CSS_HL2_Shotgun )
 	DEFINE_PRED_FIELD( m_bDelayedReload, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 
 END_PREDICTION_DATA()
-#endif
-
-#ifndef CLIENT_DLL
-#if MAPBASE_VER_INT >= 7000
-// 
-// Return the original shotgun's act table
-// 
-acttable_t *CBase_CSS_HL2_Shotgun::ActivityList( void ) { return GetShotgunActtable(); }
-int CBase_CSS_HL2_Shotgun::ActivityListCount( void ) { return GetShotgunActtableCount(); }
-#else
-acttable_t	CBase_CSS_HL2_Shotgun::m_acttable[] =
-{
-	{ ACT_RANGE_ATTACK1,			ACT_RANGE_ATTACK_AR2,			true },
-	{ ACT_RELOAD,					ACT_RELOAD_SMG1,				true },		// FIXME: hook to AR2 unique
-	{ ACT_IDLE,						ACT_IDLE_SMG1,					true },		// FIXME: hook to AR2 unique
-	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_SMG1,			true },		// FIXME: hook to AR2 unique
-
-	{ ACT_WALK,						ACT_WALK_RIFLE,					true },
-
-// Readiness activities (not aiming)
-	{ ACT_IDLE_RELAXED,				ACT_IDLE_SMG1_RELAXED,			false },//never aims
-	{ ACT_IDLE_STIMULATED,			ACT_IDLE_SMG1_STIMULATED,		false },
-	{ ACT_IDLE_AGITATED,			ACT_IDLE_ANGRY_SMG1,			false },//always aims
-
-	{ ACT_WALK_RELAXED,				ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_STIMULATED,			ACT_WALK_RIFLE_STIMULATED,		false },
-	{ ACT_WALK_AGITATED,			ACT_WALK_AIM_RIFLE,				false },//always aims
-
-	{ ACT_RUN_RELAXED,				ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_STIMULATED,			ACT_RUN_RIFLE_STIMULATED,		false },
-	{ ACT_RUN_AGITATED,				ACT_RUN_AIM_RIFLE,				false },//always aims
-
-// Readiness activities (aiming)
-	{ ACT_IDLE_AIM_RELAXED,			ACT_IDLE_SMG1_RELAXED,			false },//never aims	
-	{ ACT_IDLE_AIM_STIMULATED,		ACT_IDLE_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_IDLE_AIM_AGITATED,		ACT_IDLE_ANGRY_SMG1,			false },//always aims
-
-	{ ACT_WALK_AIM_RELAXED,			ACT_WALK_RIFLE_RELAXED,			false },//never aims
-	{ ACT_WALK_AIM_STIMULATED,		ACT_WALK_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_WALK_AIM_AGITATED,		ACT_WALK_AIM_RIFLE,				false },//always aims
-
-	{ ACT_RUN_AIM_RELAXED,			ACT_RUN_RIFLE_RELAXED,			false },//never aims
-	{ ACT_RUN_AIM_STIMULATED,		ACT_RUN_AIM_RIFLE_STIMULATED,	false },
-	{ ACT_RUN_AIM_AGITATED,			ACT_RUN_AIM_RIFLE,				false },//always aims
-//End readiness activities
-
-	{ ACT_WALK_AIM,					ACT_WALK_AIM_RIFLE,				true },
-	{ ACT_WALK_CROUCH,				ACT_WALK_CROUCH_RIFLE,			true },
-	{ ACT_WALK_CROUCH_AIM,			ACT_WALK_CROUCH_AIM_RIFLE,		true },
-	{ ACT_RUN,						ACT_RUN_RIFLE,					true },
-	{ ACT_RUN_AIM,					ACT_RUN_AIM_RIFLE,				true },
-	{ ACT_RUN_CROUCH,				ACT_RUN_CROUCH_RIFLE,			true },
-	{ ACT_RUN_CROUCH_AIM,			ACT_RUN_CROUCH_AIM_RIFLE,		true },
-	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_AR2,	false },
-	{ ACT_COVER_LOW,				ACT_COVER_SMG1_LOW,				false },		// FIXME: hook to AR2 unique
-	{ ACT_RANGE_AIM_LOW,			ACT_RANGE_AIM_AR2_LOW,			false },
-	{ ACT_RANGE_ATTACK1_LOW,		ACT_RANGE_ATTACK_SMG1_LOW,		true },		// FIXME: hook to AR2 unique
-	{ ACT_RELOAD_LOW,				ACT_RELOAD_SMG1_LOW,			false },
-	{ ACT_GESTURE_RELOAD,			ACT_GESTURE_RELOAD_SMG1,		true },
-//	{ ACT_RANGE_ATTACK2, ACT_RANGE_ATTACK_AR2_GRENADE, true },
-};
-
-IMPLEMENT_ACTTABLE( CBase_CSS_HL2_Rifle );
-#endif
 #endif
 
 extern ConVar sk_auto_reload_time;
