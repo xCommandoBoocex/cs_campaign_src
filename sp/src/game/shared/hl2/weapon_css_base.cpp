@@ -569,6 +569,22 @@ const WeaponProficiencyInfo_t *CBase_CSS_HL2_MachineGun::GetProficiencyValues()
 // CBase_CSS_HL2_Rifle
 //-----------------------------------------------------------------------------
 
+const WeaponProficiencyInfo_t *CBase_CSS_HL2_Rifle::GetProficiencyValues()
+{
+	static WeaponProficiencyInfo_t proficiencyTable[] =
+	{
+		{ 7.0,		0.75	},
+		{ 5.00,		0.75	},
+		{ 3.0,		0.85	},
+		{ 5.0/3.0,	0.75	},
+		{ 1.00,		1.0		},
+	};
+
+	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);
+
+	return proficiencyTable;
+}
+
 //-----------------------------------------------------------------------------
 // CBase_CSS_HL2_SniperRifle
 //-----------------------------------------------------------------------------
@@ -608,6 +624,25 @@ CBase_CSS_HL2_SniperRifle::CBase_CSS_HL2_SniperRifle( )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+const WeaponProficiencyInfo_t *CBase_CSS_HL2_SniperRifle::GetProficiencyValues()
+{
+	static WeaponProficiencyInfo_t proficiencyTable[] =
+	{
+		{ 5.0,		0.75	},
+		{ 3.00,		0.75	},
+		{ 2.0,		0.75	},
+		{ 1.5,		0.85	},
+		{ 1.00,		1.0		},
+	};
+
+	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);
+
+	return proficiencyTable;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 void CBase_CSS_HL2_SniperRifle::Precache( void )
 {
 	BaseClass::Precache();
@@ -634,6 +669,20 @@ void CBase_CSS_HL2_SniperRifle::AddViewKick( void )
 
 	//Add it to the view punch
 	pPlayer->ViewPunch( viewPunch );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : &info - 
+//-----------------------------------------------------------------------------
+void CBase_CSS_HL2_SniperRifle::FireBullets( const FireBulletsInfo_t &info )
+{
+	FireBulletsInfo_t newInfo = info;
+
+	// Sniper rifles don't deal enough force, scale based on our damage multiplier
+	newInfo.m_flDamageForceScale = GetDamageMultiplier() * 4.0f;
+
+	BaseClass::FireBullets( newInfo );
 }
 
 //-----------------------------------------------------------------------------

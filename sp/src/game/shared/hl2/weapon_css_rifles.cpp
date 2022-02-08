@@ -456,6 +456,9 @@ public:
 	virtual int		GetZoomRate() const { return 0.2f; }
 	virtual int		GetUnZoomRate() const { return 0.15f; }
 
+	virtual int	GetMinBurst() { return 1; }
+	virtual int	GetMaxBurst() { return 3; }
+
 	// Player damage: 7 -> 25.2 (25)
 	// NPC damage: 3 -> 18
 	virtual float GetDamageMultiplier() const { return 3.6f; }

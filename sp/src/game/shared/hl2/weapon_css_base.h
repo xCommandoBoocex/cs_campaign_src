@@ -84,11 +84,6 @@ public:
 	virtual bool	InBurst() const { return false; }
 	bool CanUseBurstMode() const { return this->m_bCanUseBurstMode; }
 
-	bool ShouldDisplayAltFireHUDHint()
-	{
-		return BaseClass::ShouldDisplayAltFireHUDHint() && (this->CanToggleSilencer() || this->CanUseBurstMode());
-	}
-
 	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR1; }
 
 #ifndef CLIENT_DLL
@@ -281,9 +276,14 @@ public:
 		}
 	}
 
+	bool ShouldDisplayAltFireHUDHint()
+	{
+		return BaseClass::ShouldDisplayAltFireHUDHint() && this->CanToggleSilencer();
+	}
+
 	const char *GetWorldModel( void ) const
 	{
-		if (IsSilenced())
+		if (this->IsSilenced())
 		{
 			return this->m_szSilencedModel;
 		}
@@ -295,7 +295,7 @@ public:
 
 	int GetWorldModelIndex( void )
 	{
-		if (IsSilenced())
+		if (this->IsSilenced())
 		{
 			return this->m_iSilencedModelIndex;
 		}
@@ -415,6 +415,11 @@ public:
 
 			this->m_flNextSecondaryAttack = gpGlobals->curtime + 0.5f; // TODO: Real cooldown?
 		}
+	}
+
+	bool ShouldDisplayAltFireHUDHint()
+	{
+		return BaseClass::ShouldDisplayAltFireHUDHint() && this->CanUseBurstMode();
 	}
 
 	virtual void FinishBurst( void )
@@ -589,6 +594,8 @@ public:
 			}
 		}
 
+		WeaponSound( SPECIAL3 );
+
 		// Scope overlay handled by CBase_CSS_HL2_SniperRifle
 	}
 	
@@ -756,6 +763,8 @@ public:
 
 	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR2; }
 
+	const WeaponProficiencyInfo_t *GetProficiencyValues();
+
 	int		GetMinBurst( void ) { return 2; }
 	int		GetMaxBurst( void ) { return 5; }
 
@@ -778,6 +787,8 @@ public:
 
 	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SNIPER_RIFLE; }
 
+	const WeaponProficiencyInfo_t *GetProficiencyValues();
+
 	virtual bool	IsWeaponZoomed() { return m_nZoomLevel > 0; }
 
 	virtual int		GetZoom1FOV() const { return 55; }
@@ -788,8 +799,16 @@ public:
 	void	Precache();
 	void	AddViewKick( void );
 
+	virtual void FireBullets( const FireBulletsInfo_t &info );
+
 	virtual void	ToggleZoom( void );
 	virtual void	StopZoom( void );
+
+	virtual int	GetMinBurst() { return 1; }
+	virtual int	GetMaxBurst() { return 1; }
+
+	virtual float	GetMinRestTime() { return 1.55f; }
+	virtual float	GetMaxRestTime() { return 1.8f; }
 
 private:
 	CNetworkVar( int, m_nZoomLevel );
