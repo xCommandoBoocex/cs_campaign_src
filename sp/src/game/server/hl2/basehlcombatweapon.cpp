@@ -109,7 +109,11 @@ void CHLMachineGun::PrimaryAttack( void )
 	//Factor in the view kick
 	AddViewKick();
 
+#ifdef CSS_WEAPONS_IN_HL2
+	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), IsSilenced() ? SOUNDENT_VOLUME_MACHINEGUN / 3.0 : SOUNDENT_VOLUME_MACHINEGUN, 0.2, pPlayer );
+#else
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pPlayer );
+#endif
 	
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{

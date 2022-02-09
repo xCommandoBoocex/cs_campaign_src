@@ -24,6 +24,9 @@ public:
 
 	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_SMG2; }
 
+	// TMP is always silenced
+	virtual bool IsSilenced() const { return true; }
+
 	virtual float GetViewKickBase() { return 2.75f; }
 	
 	virtual const Vector& GetBulletSpread( void )
