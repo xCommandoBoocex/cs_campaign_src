@@ -307,12 +307,12 @@ public:
 
 	void InputSetSilencer( inputdata_t &inputdata )
 	{
-		m_bSilenced = inputdata.value.Bool();
+		this->m_bSilenced = inputdata.value.Bool();
 	}
 
 	void InputToggleSilencer( inputdata_t &inputdata )
 	{
-		m_bSilenced = !m_bSilenced;
+		this->m_bSilenced = !this->m_bSilenced;
 	}
 
 public:
@@ -809,6 +809,9 @@ public:
 
 	virtual float	GetMinRestTime() { return 1.55f; }
 	virtual float	GetMaxRestTime() { return 1.8f; }
+
+	// Scale based on our damage multiplier by default
+	virtual float	GetDamageForceScale() const { return GetDamageMultiplier() * 4.0f; }
 
 private:
 	CNetworkVar( int, m_nZoomLevel );

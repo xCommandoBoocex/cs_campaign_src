@@ -520,6 +520,9 @@ public:
 	// NPC damage: 30 -> 45
 	virtual float GetDamageMultiplier() const { return 1.5f; }
 	virtual float GetNPCDamageMultiplier() const { return 1.5f; }
+
+	// The .357 ammo already delivers a lot of force, so use a tamer force scale for the AWP
+	virtual float	GetDamageForceScale() const { return 2.0f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_AWP, DT_Weapon_CSS_HL2_AWP )

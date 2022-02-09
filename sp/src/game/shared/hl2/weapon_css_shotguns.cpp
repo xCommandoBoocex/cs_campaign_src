@@ -88,7 +88,7 @@ public:
 	// No secondary attack
 	void SecondaryAttack( void ) {}
 
-	virtual float GetFireRate( void ) { return IsNPC() ? 0.5f : 0.25f; }
+	virtual float GetFireRate( void ) { return (GetOwner() && GetOwner()->IsNPC()) ? 0.5f : 0.25f; }
 	
 	virtual float			GetMinRestTime() { return 0.6; }
 	virtual float			GetMaxRestTime() { return 1.0; }

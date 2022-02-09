@@ -679,8 +679,8 @@ void CBase_CSS_HL2_SniperRifle::FireBullets( const FireBulletsInfo_t &info )
 {
 	FireBulletsInfo_t newInfo = info;
 
-	// Sniper rifles don't deal enough force, scale based on our damage multiplier
-	newInfo.m_flDamageForceScale = GetDamageMultiplier() * 4.0f;
+	// Sniper rifles don't deal enough force, so allow an overridable scale
+	newInfo.m_flDamageForceScale = GetDamageForceScale();
 
 	BaseClass::FireBullets( newInfo );
 }

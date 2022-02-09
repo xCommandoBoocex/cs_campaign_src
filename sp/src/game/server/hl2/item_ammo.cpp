@@ -590,8 +590,8 @@ public:
 LINK_ENTITY_TO_CLASS( item_ammo_ar2_altfire, CItem_AR2AltFireRound );
 
 #ifdef CSS_WEAPONS_IN_HL2
-#define SIZE_AMMO_40ACP				12
-#define SIZE_AMMO_40ACP_LARGE		60
+#define SIZE_AMMO_45ACP				15
+#define SIZE_AMMO_45ACP_LARGE		60
 #define SIZE_AMMO_357SIG			13
 #define SIZE_AMMO_357SIG_LARGE		39
 #define SIZE_AMMO_556mm			30
@@ -619,7 +619,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_40ACP : SIZE_AMMO_40ACP_LARGE, "45ACP"))
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_45ACP : SIZE_AMMO_45ACP_LARGE, "45ACP"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -655,7 +655,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_40ACP : SIZE_AMMO_40ACP_LARGE, "357SIG"))
+		if (ITEM_GiveAmmo( pPlayer, !IsLarge() ? SIZE_AMMO_357SIG : SIZE_AMMO_357SIG_LARGE, "357SIG"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
