@@ -429,6 +429,8 @@ CWeapon_CSS_HL2_FiveSeveN::CWeapon_CSS_HL2_FiveSeveN( void )
 {
 }
 
+#define DUAL_BERETTAS_DROPPED_MODEL "models/weapons/w_pist_elite_dropped.mdl"
+
 //-----------------------------------------------------------------------------
 // CWeapon_CSS_HL2_DualBerettas
 //-----------------------------------------------------------------------------
@@ -470,6 +472,25 @@ public:
 		return cone;
 	}
 
+#if MAPBASE_VER_INT < 7000
+	void Activate()
+	{
+		BaseClass::Activate();
+
+		m_iDroppedModelIndex = CBaseEntity::PrecacheModel( DUAL_BERETTAS_DROPPED_MODEL );
+	}
+
+	const char *GetWorldModel( void ) const
+	{
+		return GetOwner() == NULL ? DUAL_BERETTAS_DROPPED_MODEL : BaseClass::GetWorldModel();
+	}
+
+	int GetWorldModelIndex( void )
+	{
+		return GetOwner() == NULL ? m_iDroppedModelIndex : BaseClass::GetWorldModelIndex();
+	}
+#endif
+
 	virtual float GetFireRate( void ) { return 0.5f; }
 	virtual float GetRefireRate( void ) { return 0.12f; }
 	virtual float GetDryRefireRate( void ) { return 0.25f; }
@@ -482,14 +503,23 @@ public:
 
 private:
 	CNetworkVar( bool, m_bGunMode );
+#if MAPBASE_VER_INT < 7000
+	CNetworkVar( int, m_iDroppedModelIndex ); // Not saved
+#endif
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_DualBerettas, DT_Weapon_CSS_HL2_DualBerettas )
 
 #ifdef CLIENT_DLL
 	RecvPropBool( RECVINFO( m_bGunMode ) ),
+#if MAPBASE_VER_INT < 7000
+	RecvPropInt( RECVINFO( m_iDroppedModelIndex ) ),
+#endif
 #else
 	SendPropBool( SENDINFO( m_bGunMode ) ),
+#if MAPBASE_VER_INT < 7000
+	SendPropModelIndex( SENDINFO( m_iDroppedModelIndex ) ),
+#endif
 #endif
 
 END_NETWORK_TABLE()
