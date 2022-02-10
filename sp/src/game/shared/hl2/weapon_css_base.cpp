@@ -590,6 +590,7 @@ const WeaponProficiencyInfo_t *CBase_CSS_HL2_Rifle::GetProficiencyValues()
 //-----------------------------------------------------------------------------
 BEGIN_DATADESC( CBase_CSS_HL2_SniperRifle )
 
+	DEFINE_KEYFIELD( m_bCanUseScope, FIELD_BOOLEAN, "CanUseScope" ),
 	DEFINE_FIELD( m_nZoomLevel, FIELD_INTEGER ),
 
 END_DATADESC()
@@ -597,8 +598,10 @@ END_DATADESC()
 IMPLEMENT_NETWORKCLASS_DT( CBase_CSS_HL2_SniperRifle, DT_Base_CSS_HL2_SniperRifle )
 
 #ifdef CLIENT_DLL
+	RecvPropBool( RECVINFO( m_bCanUseScope ) ),
 	RecvPropInt( RECVINFO( m_nZoomLevel ) ),
 #else
+	SendPropBool( SENDINFO( m_bCanUseScope ) ),
 	SendPropInt( SENDINFO( m_nZoomLevel ) ),
 #endif
 
@@ -619,6 +622,8 @@ CBase_CSS_HL2_SniperRifle::CBase_CSS_HL2_SniperRifle( )
 	m_fMaxRange1		= 1400;
 
 	m_bAltFiresUnderwater = false;
+
+	m_bCanUseScope = true;
 }
 
 //-----------------------------------------------------------------------------

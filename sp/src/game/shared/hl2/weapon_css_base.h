@@ -79,10 +79,12 @@ public:
 
 	virtual bool	IsSilenced() const { return false; }
 	virtual void	SetSilenced( bool bSilenced ) {}
-	bool CanToggleSilencer() const { return this->m_bCanToggleSilencer; }
+	virtual bool	CanToggleSilencer() const { return false; }
 
 	virtual bool	InBurst() const { return false; }
-	bool CanUseBurstMode() const { return this->m_bCanUseBurstMode; }
+	virtual bool	CanUseBurstMode() const { return false; }
+
+	virtual bool	CanUseScope() const { return false; }
 
 	virtual CSS_HL2_WeaponActClass		GetCSSWeaponActClass() { return CSSHL2_WEAPON_AR1; }
 
@@ -150,26 +152,20 @@ public:
 	}
 #endif
 
-public:
-	CNetworkVar( bool, m_bCanToggleSilencer );
-	CNetworkVar( bool, m_bCanUseBurstMode );
 };
 
-#define DEFINE_CSS_WEAPON_DATADESC() \
-	DEFINE_KEYFIELD( m_bCanToggleSilencer, FIELD_BOOLEAN, "CanToggleSilencer" ),	\
-	DEFINE_KEYFIELD( m_bCanUseBurstMode, FIELD_BOOLEAN, "CanUseBurstMode" ),	\
+// Vars for all CS:S weapons. Not currently used
+#define DEFINE_CSS_WEAPON_DATADESC()
 
 #ifdef CLIENT_DLL
 
-#define DEFINE_CSS_WEAPON_NETWORK_TABLE() \
-	RecvPropBool( RECVINFO( m_bCanToggleSilencer ) ),	\
-	RecvPropBool( RECVINFO( m_bCanUseBurstMode ) ),	\
+// Vars for all CS:S weapons. Not currently used
+#define DEFINE_CSS_WEAPON_NETWORK_TABLE()
 
 #else
 
-#define DEFINE_CSS_WEAPON_NETWORK_TABLE() \
-	SendPropBool( SENDINFO( m_bCanToggleSilencer ) ),	\
-	SendPropBool( SENDINFO( m_bCanUseBurstMode ) ),	\
+// Vars for all CS:S weapons. Not currently used
+#define DEFINE_CSS_WEAPON_NETWORK_TABLE()
 
 #endif
 
@@ -183,8 +179,9 @@ class CBase_CSS_HL2_SilencedWeapon : public BASE_WEAPON
 
 public:
 
-	virtual bool IsSilenced() const { return this->m_bSilenced; }
-	virtual void SetSilenced( bool bSilenced ) { this->m_bSilenced = bSilenced; }
+	bool CanToggleSilencer() const { return this->m_bCanToggleSilencer; }
+	bool IsSilenced() const { return this->m_bSilenced; }
+	void SetSilenced( bool bSilenced ) { this->m_bSilenced = bSilenced; }
 
 	void Spawn()
 	{
@@ -199,12 +196,12 @@ public:
 		// Get the silenced model
 		if (this->CanToggleSilencer())
 		{
-			V_StripExtension( this->GetWorldModel(), m_szSilencedModel, sizeof( m_szSilencedModel ) );
-			V_strncat( m_szSilencedModel, "_silencer.mdl", sizeof( m_szSilencedModel ), sizeof( m_szSilencedModel ) );
+			V_StripExtension( this->GetWorldModel(), this->m_szSilencedModel, sizeof( this->m_szSilencedModel ) );
+			V_strncat( this->m_szSilencedModel, "_silencer.mdl", sizeof( this->m_szSilencedModel ), sizeof( this->m_szSilencedModel ) );
 
-			if ( m_szSilencedModel[0] )
+			if ( this->m_szSilencedModel[0] )
 			{
-				m_iSilencedModelIndex = CBaseEntity::PrecacheModel( m_szSilencedModel );
+				this->m_iSilencedModelIndex = CBaseEntity::PrecacheModel( this->m_szSilencedModel );
 			}
 		}
 	}
@@ -316,6 +313,7 @@ public:
 	}
 
 public:
+	CNetworkVar( bool, m_bCanToggleSilencer );
 	CNetworkVar( bool, m_bSilenced );
 	CNetworkVar( int, m_iSilencedModelIndex ); // Not saved
 
@@ -325,6 +323,7 @@ public:
 #ifdef CLIENT_DLL
 
 #define DEFINE_CSS_WEAPON_SILENCED_NETWORK_TABLE() \
+	RecvPropBool( RECVINFO( m_bCanToggleSilencer ) ),	\
 	RecvPropBool( RECVINFO( m_bSilenced ) ), \
 	RecvPropInt( RECVINFO(m_iSilencedModelIndex) ), \
 
@@ -334,10 +333,12 @@ public:
 #else
 
 #define DEFINE_CSS_WEAPON_SILENCED_NETWORK_TABLE() \
+	SendPropBool( SENDINFO( m_bCanToggleSilencer ) ),	\
 	SendPropBool( SENDINFO( m_bSilenced ) ), \
 	SendPropModelIndex( SENDINFO(m_iSilencedModelIndex) ), \
 
 #define DEFINE_CSS_WEAPON_SILENCED_DATADESC() \
+	DEFINE_KEYFIELD( m_bCanToggleSilencer, FIELD_BOOLEAN, "CanToggleSilencer" ),	\
 	DEFINE_KEYFIELD( m_bSilenced, FIELD_BOOLEAN, "Silenced" ), \
 	DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetSilencer", InputSetSilencer ),	\
 	DEFINE_INPUTFUNC( FIELD_VOID, "ToggleSilencer", InputToggleSilencer ),	\
@@ -354,7 +355,8 @@ class CBase_CSS_HL2_BurstableWeapon : public BASE_WEAPON
 
 public:
 
-	virtual bool	InBurst() const { return this->m_iBurstSize > 0 || (this->m_bInBurstMode && this->GetOwner() && this->GetOwner()->IsNPC()); }
+	bool	InBurst() const { return this->m_iBurstSize > 0 || (this->m_bInBurstMode && this->GetOwner() && this->GetOwner()->IsNPC()); }
+	bool	CanUseBurstMode() const { return this->m_bCanUseBurstMode; }
 
 	//virtual float	GetBurstCycleRate( void ) { return 1.0f; }
 	virtual int		GetBurstSize( void ) { return 3; };
@@ -461,6 +463,7 @@ public:
 	}
 
 public:
+	CNetworkVar( bool, m_bCanUseBurstMode );
 	CNetworkVar( bool, m_bInBurstMode );
 	CNetworkVar( int, m_iBurstSize );
 };
@@ -468,10 +471,12 @@ public:
 #ifdef CLIENT_DLL
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_NETWORK_TABLE() \
+	RecvPropBool( RECVINFO( m_bCanUseBurstMode ) ),	\
 	RecvPropBool( RECVINFO( m_bInBurstMode ) ),	\
 	RecvPropInt( RECVINFO( m_iBurstSize ) ),	\
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_DATADESC() \
+	DEFINE_KEYFIELD( m_bCanUseBurstMode, FIELD_BOOLEAN, "CanUseBurstMode" ),	\
 	DEFINE_FIELD( m_bInBurstMode, FIELD_BOOLEAN ),	\
 	DEFINE_FIELD( m_iBurstSize, FIELD_INTEGER ),	\
 
@@ -482,10 +487,12 @@ public:
 #else
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_NETWORK_TABLE() \
+	SendPropBool( SENDINFO( m_bCanUseBurstMode ) ),	\
 	SendPropBool( SENDINFO( m_bInBurstMode ) ), \
 	SendPropInt( SENDINFO( m_iBurstSize ) ), \
 
 #define DEFINE_CSS_WEAPON_BURSTABLE_DATADESC() \
+	DEFINE_KEYFIELD( m_bCanUseBurstMode, FIELD_BOOLEAN, "CanUseBurstMode" ),	\
 	DEFINE_KEYFIELD( m_bInBurstMode, FIELD_BOOLEAN, "InBurstMode" ),	\
 	DEFINE_FIELD( m_iBurstSize, FIELD_INTEGER ),	\
 	DEFINE_FUNCTION( BurstThink ),	\
@@ -505,6 +512,8 @@ class CBase_CSS_HL2_BaseScopeableWeapon : public BASE_WEAPON
 
 public:
 
+	bool CanUseScope() const { return this->m_bCanUseScope; }
+
 	bool Reload( void )
 	{
 		bool bBase = BaseClass::Reload();
@@ -523,6 +532,9 @@ public:
 
 	void CheckZoomToggle( void )
 	{
+		if (this->CanUseScope() == false)
+			return;
+
 		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 
 		if (pPlayer->m_afButtonPressed & IN_ATTACK2)
@@ -556,6 +568,14 @@ public:
 
 		BaseClass::ItemPostFrame();
 	}
+
+	bool ShouldDisplayAltFireHUDHint()
+	{
+		return BaseClass::ShouldDisplayAltFireHUDHint() && this->CanUseScope();
+	}
+
+public:
+	CNetworkVar( bool, m_bCanUseScope );
 };
 
 // For scoped assault rifles
@@ -606,6 +626,7 @@ public:
 #ifdef CLIENT_DLL
 
 #define DEFINE_CSS_WEAPON_SCOPEABLE_NETWORK_TABLE() \
+	RecvPropBool( RECVINFO( m_bCanUseScope ) ),	\
 	RecvPropBool( RECVINFO( m_bInZoom ) ),	\
 
 #define DEFINE_CSS_WEAPON_SCOPEABLE_PREDICTDESC() \
@@ -614,11 +635,13 @@ public:
 #else
 
 #define DEFINE_CSS_WEAPON_SCOPEABLE_NETWORK_TABLE() \
+	SendPropBool( SENDINFO( m_bCanUseScope ) ),	\
 	SendPropBool( SENDINFO( m_bInZoom ) ), \
 
 #endif
 
 #define DEFINE_CSS_WEAPON_SCOPEABLE_DATADESC() \
+	DEFINE_KEYFIELD( m_bCanUseScope, FIELD_BOOLEAN, "CanUseScope" ),	\
 	DEFINE_FIELD( m_bInZoom,		FIELD_BOOLEAN ),	\
 
 //=============================================================================
