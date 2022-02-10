@@ -169,10 +169,14 @@ public:
 	virtual float GetRefireRate( void ) { return 0.15f;	}
 	virtual float GetDryRefireRate( void ) { return 0.2f; }
 
+	// CS:S damage boost
+	// Player damage: 7 -> 7.7 (8)
+	// 
 	// Silencer damage adjustment
-	// Player damage: 8 -> 6.4 (6)
+	// Player damage: 7 -> 6.3 (6)
+	// 
 	// NPC damage: 3 -> 3
-	virtual float GetDamageMultiplier() const { return IsSilenced() ? 0.8f : 1.0f; }
+	virtual float GetDamageMultiplier() const { return IsSilenced() ? 0.9f : 1.1f; }
 	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 

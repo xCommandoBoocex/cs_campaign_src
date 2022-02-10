@@ -44,7 +44,7 @@ public:
 	virtual float GetFireRate( void ) { return InBurst() ? 0.075f : 0.09f; }
 
 	// Tries to replicate CS:S's lessened damage
-	// Player damage: 7 -> 6.3 (6)
+	// Player damage: 8 -> 7.2 (7)
 	// NPC damage: 3 -> 3
 	virtual float GetDamageMultiplier() const { return 0.9f; }
 	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
@@ -230,12 +230,6 @@ public:
 	}
 
 	virtual float GetFireRate( void ) { return 0.09f; }
-
-	// Tries to replicate CS:S's boosted damage
-	// Player damage: 7 -> 7.7 (8)
-	// NPC damage: 3 -> 3
-	virtual float GetDamageMultiplier() const { return 1.1f; }
-	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_SG552, DT_Weapon_CSS_HL2_SG552 )
@@ -461,9 +455,9 @@ public:
 	virtual int	GetMinBurst() { return 1; }
 	virtual int	GetMaxBurst() { return 3; }
 
-	// Player damage: 7 -> 25.2 (25)
+	// Player damage: 8 -> 24.8 (25)
 	// NPC damage: 3 -> 18
-	virtual float GetDamageMultiplier() const { return 3.6f; }
+	virtual float GetDamageMultiplier() const { return 3.1f; }
 	virtual float GetNPCDamageMultiplier() const { return 6.0f; }
 };
 

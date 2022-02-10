@@ -182,7 +182,7 @@ ConVar	sk_npc_dmg_gunship			( "sk_npc_dmg_gunship", "0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_gunship_to_plr	( "sk_npc_dmg_gunship_to_plr", "0", FCVAR_REPLICATED );
 
 #ifdef CSS_WEAPONS_IN_HL2
-ConVar	sk_plr_dmg_45acp			( "sk_plr_dmg_45acp", "8", FCVAR_REPLICATED );
+ConVar	sk_plr_dmg_45acp			( "sk_plr_dmg_45acp", "7", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_45acp			( "sk_npc_dmg_45acp", "3", FCVAR_REPLICATED );
 ConVar	sk_max_45acp				( "sk_max_45acp", "100", FCVAR_REPLICATED );
 
@@ -190,7 +190,7 @@ ConVar	sk_plr_dmg_357sig			( "sk_plr_dmg_357sig", "20", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_357sig			( "sk_npc_dmg_357sig", "15", FCVAR_REPLICATED );
 ConVar	sk_max_357sig				( "sk_max_357sig", "52", FCVAR_REPLICATED );
 
-ConVar	sk_plr_dmg_556mm			( "sk_plr_dmg_556mm", "7", FCVAR_REPLICATED );
+ConVar	sk_plr_dmg_556mm			( "sk_plr_dmg_556mm", "8", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_556mm			( "sk_npc_dmg_556mm", "3", FCVAR_REPLICATED );
 ConVar	sk_max_556mm				( "sk_max_556mm", "90", FCVAR_REPLICATED );
 

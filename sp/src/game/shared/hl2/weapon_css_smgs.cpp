@@ -136,11 +136,6 @@ public:
 	}
 
 	virtual float GetFireRate( void ) { return 0.105f; }
-
-	// Player damage: 8 -> 7.2 (7)
-	// NPC damage: 3 -> 3
-	virtual float GetDamageMultiplier() const { return 0.9f; }
-	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_UMP45, DT_Weapon_CSS_HL2_UMP45 )
@@ -239,11 +234,6 @@ public:
 	}
 
 	virtual float GetFireRate( void ) { return 0.075f; }
-
-	// Player damage: 8 -> 7.2 (7)
-	// NPC damage: 3 -> 3
-	virtual float GetDamageMultiplier() const { return 0.9f; }
-	virtual float GetNPCDamageMultiplier() const { return 1.0f; }
 };
 
 IMPLEMENT_NETWORKCLASS_DT( CWeapon_CSS_HL2_MAC10, DT_Weapon_CSS_HL2_MAC10 )
