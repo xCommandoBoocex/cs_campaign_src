@@ -590,15 +590,6 @@ public:
 LINK_ENTITY_TO_CLASS( item_ammo_ar2_altfire, CItem_AR2AltFireRound );
 
 #ifdef CSS_WEAPONS_IN_HL2
-#define SIZE_AMMO_45ACP				15
-#define SIZE_AMMO_45ACP_LARGE		60
-#define SIZE_AMMO_357SIG			13
-#define SIZE_AMMO_357SIG_LARGE		39
-#define SIZE_AMMO_556mm			30
-#define SIZE_AMMO_556mm_LARGE		60
-#define SIZE_AMMO_762mm			30
-#define SIZE_AMMO_762mm_LARGE		60
-
 // ========================================================================
 //	>> Box45ACPRounds
 // ========================================================================
